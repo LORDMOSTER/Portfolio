@@ -244,6 +244,10 @@
   gap: 4px;
 }
 
+.stat-item.full-width {
+  grid-column: 1 / -1;
+}
+
 .stat-label {
   font-size: 0.8rem;
   color: var(--text-muted);

@@ -53,7 +53,7 @@ const Home: React.FC = () => {
             <span className="mono-text">//</span> Full-Stack & Backend Systems Developer
           </p>
 
-          <motion.div 
+          <motion.div
             className="typing-summary text-muted"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
             </a>
           </div>
         </div>
-        
+
         <div className="hero-avatar">
           <div className="avatar-container">
             <svg className="avatar-track" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -94,21 +94,21 @@ const Home: React.FC = () => {
                   <stop offset="100%" stopColor="var(--accent-gold-dark)" />
                 </linearGradient>
               </defs>
-              <circle 
+              <circle
                 className="track-base"
-                cx="100" cy="100" r="96" 
+                cx="100" cy="100" r="96"
                 fill="none" stroke="var(--border-color)" strokeWidth="2"
               />
-              <circle 
+              <circle
                 className="track-moving"
-                cx="100" cy="100" r="96" 
+                cx="100" cy="100" r="96"
                 fill="none" stroke="url(#goldGradient)" strokeWidth="4"
                 strokeLinecap="round"
                 strokeDasharray="150 450"
               />
-              <circle 
+              <circle
                 className="track-moving-secondary"
-                cx="100" cy="100" r="88" 
+                cx="100" cy="100" r="88"
                 fill="none" stroke="var(--accent-gold)" strokeWidth="1"
                 strokeDasharray="50 300"
               />
@@ -126,7 +126,7 @@ const Home: React.FC = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// ENGINEER_PROFILE</h2>
           <div className="header-line"></div>
         </div>
-        
+
         <div className="telemetry-dashboard">
           <div className="card identity-card">
             <h3 className="card-title mono-text">What I Build</h3>
@@ -134,25 +134,38 @@ const Home: React.FC = () => {
               Targeting high-scale, real-time architectures. Focused on reducing query latency and optimizing multi-user processing pipelines.
             </p>
           </div>
-          
-          <div className="card baseline-card">
-            <h3 className="card-title mono-text">Education</h3>
-            <div className="baseline-stats">
-              <div className="stat-item">
-                <span className="stat-label">Degree</span>
-                <span className="stat-value">B.E. CSE</span>
+
+          <div className="card baseline-card" style={{ backgroundColor: 'rgba(18, 18, 18, 0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <h3 className="card-title mono-text mb-6">Education</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Row 1 */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Degree</span>
+                  <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>B.E. CSE</span>
+                </div>
+                <div>
+                  <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Batch</span>
+                  <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>2023 - 2027</span>
+                </div>
               </div>
-              <div className="stat-item">
-                <span className="stat-label">Institution</span>
-                <span className="stat-value">Nandha College of Technology</span>
+
+              {/* Row 2 */}
+              <div>
+                <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Institution</span>
+                <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>Nandha College of Technology</span>
               </div>
-              <div className="stat-item">
-                <span className="stat-label">GPA</span>
-                <span className="stat-value">7.8</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Arrears</span>
-                <span className="stat-value">0</span>
+
+              {/* Row 3 */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>CGPA</span>
+                  <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>7.8</span>
+                </div>
+                <div>
+                  <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Arrears</span>
+                  <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>0</span>
+                </div>
               </div>
             </div>
           </div>
@@ -173,9 +186,9 @@ const Home: React.FC = () => {
                 </button>
               ))}
             </div>
-            
+
             <div className="arsenal-content">
-              <motion.div 
+              <motion.div
                 key={activeTab}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -193,7 +206,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Inject Work Experience under Tech Arsenal */}
         <WorkExperience />
 
