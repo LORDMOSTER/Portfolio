@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-surface: #0A0A0A;
+  --bg-card: #121212;
+  --border-color: #1A1A1A;
+  --accent-gold: #D4AF37;
+  --accent-gold-dark: #C5A059;
+  
+  --text-main: #EAEAEA;
+  --text-muted: #888888;
+  
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-surface);
+  background-image: radial-gradient(#222 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  line-height: 1.6;
+  cursor: none;
+}
+
+a, button, input, textarea, select {
+  cursor: none !important;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold-dark);
+}
+
+/* App Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  padding-left: 100px; /* Space for the left-side floating dock */
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-left: 0;
+    padding-bottom: 100px; /* Space for bottom floating dock */
+  }
+}
+
+/* Common game-like elements */
+.gold-text {
+  color: var(--accent-gold);
+}
+
+.mono-text {
+  font-family: var(--font-mono);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+/* Pseudo-Tailwind Utilities for Typography Standardization */
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.font-bold { font-weight: 700; }
+.text-\[\#D4AF37\] { color: #D4AF37; }
+.uppercase { text-transform: uppercase; }
+.tracking-wider { letter-spacing: 0.05em; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mt-16 { margin-top: 4rem; }
+
+@media (min-width: 768px) {
+  .md\:text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+}
+

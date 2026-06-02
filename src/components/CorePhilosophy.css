@@ -1,0 +1,112 @@
+.core-philosophy-section {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.core-header {
+  color: var(--accent-gold);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.core-philosophy-holograph {
+  position: relative;
+  background: radial-gradient(ellipse at center, rgba(26, 26, 26, 0.8) 0%, rgba(10, 10, 10, 0) 70%);
+  padding: 64px 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.holograph-bracket {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 4rem;
+  color: var(--accent-gold);
+  opacity: 0.3;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+.holograph-bracket.left {
+  left: 16px;
+}
+
+.holograph-bracket.right {
+  right: 16px;
+}
+
+.stealth-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.core-philosophy-holograph:hover .stealth-nav-btn {
+  opacity: 0.5;
+}
+
+.stealth-nav-btn:hover {
+  opacity: 1 !important;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.prev-btn {
+  left: 24px;
+}
+
+.next-btn {
+  right: 24px;
+}
+
+.quote-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  perspective: 1000px;
+  z-index: 5;
+}
+
+.philosophy-text {
+  color: #F5F5F5;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  text-align: center;
+  font-weight: 500;
+  text-shadow: 0 0 10px rgba(245, 245, 245, 0.3);
+}
+
+@media (min-width: 768px) {
+  .philosophy-text {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .holograph-bracket {
+    font-size: 2.5rem;
+  }
+  .prev-btn { left: 8px; }
+  .next-btn { right: 8px; }
+  .core-philosophy-holograph {
+    padding: 48px 32px;
+  }
+}

@@ -1,0 +1,310 @@
+/* ── Trophies Page ─────────────────────────────────────────────── */
+.trophies-page {
+  min-height: 100vh;
+  padding: 0 0 80px 0;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #e0e0e0;
+}
+
+/* ── Hero ──────────────────────────────────────────────────────── */
+.trophies-hero {
+  display: flex;
+  align-items: center;
+  padding: 48px 0 40px;
+  border-bottom: 1px solid #1a1a1a;
+  margin-bottom: 56px;
+  position: relative;
+}
+
+.trophies-hero-text h1 {
+  font-family: 'Fira Code', monospace;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: #D4AF37;
+  letter-spacing: 0.04em;
+  margin: 0 0 12px;
+}
+
+.trophies-hero-text p {
+  color: #666;
+  font-size: 0.95rem;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ── Section headers ───────────────────────────────────────────── */
+.section-header {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: #555;
+  letter-spacing: 0.08em;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #1e1e1e, transparent);
+}
+
+/* ── Apex Cards ────────────────────────────────────────────────── */
+.apex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 64px;
+}
+
+.apex-card {
+  position: relative;
+  background: rgba(12, 12, 12, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 10px;
+  padding: 28px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  animation: apexPulse 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.apex-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent);
+}
+
+@keyframes apexPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.10); }
+  50%       { box-shadow: 0 0 36px rgba(212,175,55,0.25), 0 0 64px rgba(212,175,55,0.08); }
+}
+
+.apex-icon-wrap {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apex-title {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.apex-detail {
+  font-size: 0.83rem;
+  color: #888;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Credential Cards (Certification grid) ─────────────────────── */
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 64px;
+}
+
+.cert-card {
+  position: relative;
+  background: rgba(14, 14, 14, 0.8);
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  padding: 22px 20px;
+  transition: border-color 0.3s, transform 0.2s;
+  overflow: hidden;
+}
+
+.cert-card:hover {
+  border-color: rgba(212,175,55,0.3);
+  transform: translateY(-2px);
+}
+
+.cert-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #1e1e1e, transparent);
+}
+
+.cert-issuer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #555;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #222;
+  border-radius: 3px;
+  padding: 3px 8px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cert-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ccc;
+  margin: 0 0 8px;
+  line-height: 1.4;
+  padding-right: 60px; /* space for seal */
+}
+
+.cert-detail {
+  font-size: 0.78rem;
+  color: #555;
+  margin: 0;
+  font-family: 'Fira Code', monospace;
+}
+
+/* ── Geometric Seals ───────────────────────────────────────────── */
+.geo-seal {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.geo-seal svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.geo-seal span {
+  position: relative;
+  z-index: 1;
+}
+
+.seal-gold span  { color: #D4AF37; }
+.seal-silver span { color: #C0C0C0; }
+.seal-elite span  { color: #a855f7; }
+.seal-done span   { color: #555; }
+
+/* ── Combat Log ────────────────────────────────────────────────── */
+.combat-log {
+  position: relative;
+  padding-left: 28px;
+  border-left: 2px solid #1a1a1a;
+}
+
+.combat-year-header {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #D4AF37;
+  margin: 0 0 16px;
+  position: relative;
+  left: -34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.combat-year-header::before {
+  content: '';
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #D4AF37;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(212,175,55,0.5);
+}
+
+.combat-year-group {
+  margin-bottom: 48px;
+}
+
+.combat-entry {
+  position: relative;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.combat-connector {
+  width: 24px;
+  height: 1px;
+  background: #2a2a2a;
+  flex-shrink: 0;
+  margin-top: 13px;
+  position: relative;
+  left: -28px;
+}
+
+.combat-block {
+  background: rgba(12,12,12,0.8);
+  border: 1px solid #1e1e1e;
+  border-radius: 5px;
+  padding: 10px 14px;
+  flex: 1;
+  position: relative;
+  left: -4px;
+  transition: border-color 0.25s;
+}
+
+.combat-block:hover {
+  border-color: rgba(212,175,55,0.25);
+}
+
+.combat-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ccc;
+  margin: 0 0 4px;
+}
+
+.combat-meta {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.68rem;
+  color: #555;
+  margin: 0;
+}
+
+.combat-prize {
+  display: inline-block;
+  margin-left: 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.62rem;
+  color: #D4AF37;
+  background: rgba(212,175,55,0.08);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 3px;
+  padding: 1px 6px;
+  vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+  .trophies-hero { flex-direction: column; }
+  .cert-grid { grid-template-columns: 1fr; }
+  .apex-grid { grid-template-columns: 1fr; }
+}
