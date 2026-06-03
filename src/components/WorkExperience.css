@@ -23,14 +23,7 @@
 }
 
 
-.exp-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+/* .exp-top-row layout is handled by Tailwind CSS in WorkExperience.tsx */
 
 .exp-company {
   color: #ffffff;

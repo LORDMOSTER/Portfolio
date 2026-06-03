@@ -591,21 +591,10 @@
   margin-bottom: 36px;
 }
 
-.soft-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-
-@media (max-width: 900px) {
-  .soft-skills-grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* soft-skills-grid layout is now handled by Tailwind CSS classes in Home.tsx */
 
 /* Skill cards — use premium-card base (no floating) */
 .skill-float-card {
-  padding: 28px 24px;
   /* spotlight position driven by mousemove JS */
   --spot-x: -999px;
   --spot-y: -999px;

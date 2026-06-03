@@ -40,12 +40,12 @@ const WorkExperience: React.FC = () => {
             onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
             style={{ padding: '24px' }}
           >
-            <div className="exp-top-row">
+            <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center gap-2 mb-2">
               <h4 className="exp-company">{exp.company}</h4>
               <span className="exp-duration mono-text">{exp.duration}</span>
             </div>
-            <h5 className="exp-role">{exp.role}</h5>
-            <p className="exp-details">{exp.details}</p>
+            <h5 className="exp-role leading-relaxed text-sm md:text-base">{exp.role}</h5>
+            <p className="exp-details leading-relaxed text-sm md:text-base">{exp.details}</p>
           </motion.div>
         ))}
       </div>

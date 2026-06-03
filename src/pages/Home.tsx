@@ -22,7 +22,7 @@ const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
 
 const LiquidGauge = ({ fillValue, displayLabel, label, subLabel }: { fillValue: number, displayLabel: string, label: string, subLabel: string }) => {
   return (
-    <div className="liquid-gauge-item">
+    <div className="liquid-gauge-item min-w-0">
       {/* ring wrapper provides the double gold halo */}
       <div className="liquid-orb-ring">
         <div className="liquid-orb">
@@ -76,14 +76,14 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="home-container px-4 md:px-8 overflow-x-hidden w-full">
       {/* 1. LANDING HERO & AVATAR COMPONENT */}
       <section className="hero-section">
         <div className="hero-content">
           <div className="status-badge mono-text">
             <span className="pulse-dot"></span> SYSTEM ONLINE
           </div>
-          <h1 className="hero-title">
+          <h1 className="hero-title text-3xl md:text-5xl">
             SRIHARI <span className="gold-text">P V</span>
           </h1>
           <p className="hero-subtitle">
@@ -102,7 +102,7 @@ const Home: React.FC = () => {
             <span className="cursor-blink">|</span>
           </motion.div>
 
-          <div className="hero-actions">
+          <div className="hero-actions flex flex-wrap gap-3">
             <a href="https://github.com/LORDMOSTER" target="_blank" rel="noopener noreferrer" className="pill-btn">
               <Code size={16} />
               <span className="mono-text">GitHub</span>
@@ -255,10 +255,9 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* >> LANGUAGES */}
         <div className="languages-section">
           <h2 className="languages-header">&gt;&gt; LANGUAGES</h2>
-          <div className="liquid-gauges-row">
+          <div className="liquid-gauges-row w-full flex flex-wrap">
             <LiquidGauge
               fillValue={55}
               displayLabel="75%"
@@ -277,16 +276,16 @@ const Home: React.FC = () => {
         {/* >> SOFT SKILLS */}
         <div className="soft-skills-section">
           <h2 className="soft-skills-header">&gt;&gt; SOFT SKILLS</h2>
-          <div className="soft-skills-grid">
-            <div className="skill-float-card premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
+          <div className="soft-skills-grid grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="skill-float-card premium-card p-4 md:p-6" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
               <h3 className="skill-float-title">Problem Solving</h3>
               <p className="skill-float-desc">Independent block-unblocking and deep documentation parsing.</p>
             </div>
-            <div className="skill-float-card premium-card">
+            <div className="skill-float-card premium-card p-4 md:p-6">
               <h3 className="skill-float-title">Technical Leadership</h3>
               <p className="skill-float-desc">Experience driving team deployments and cloud architecture.</p>
             </div>
-            <div className="skill-float-card premium-card">
+            <div className="skill-float-card premium-card p-4 md:p-6">
               <h3 className="skill-float-title">Clean Architecture</h3>
               <p className="skill-float-desc">Strict adherence to modularity, scalability, and DRY principles.</p>
             </div>
