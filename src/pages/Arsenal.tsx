@@ -237,7 +237,7 @@ const Arsenal: React.FC = () => {
           {tier1Projects.map(project => {
             const Icon = project.icon;
             return (
-              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
+              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-4 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
                 <div className="arsenal-card-title-group flex items-center mb-2 gap-3">
                   <Icon className="project-icon text-[#D4AF37]" size={24} />
                   <h3 className="arsenal-card-title text-white font-bold text-xl">{project.title}</h3>
@@ -248,7 +248,7 @@ const Arsenal: React.FC = () => {
                     <span key={i} className="arsenal-card-tag text-xs font-mono text-[#D4AF37] bg-[#D4AF37]/10 px-2 py-1 rounded border border-[#D4AF37]/20">[{t}]</span>
                   ))}
                 </div>
-                <div className="arsenal-card-links flex gap-4 mt-auto">
+                <div className="arsenal-card-links flex flex-wrap gap-4 text-xs mt-4">
                   <a href={project.github} target="_blank" rel="noreferrer" className="arsenal-card-link font-mono text-xs hover:text-[#D4AF37] transition-colors">[ GitHub ]</a>
                 </div>
               </div>
@@ -263,7 +263,7 @@ const Arsenal: React.FC = () => {
           {tier2Projects.map(project => {
             const Icon = project.icon;
             return (
-              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
+              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-4 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
                 <div className="arsenal-card-title-group flex items-center mb-2 gap-3">
                   <Icon className="project-icon text-[#D4AF37]" size={20} />
                   <h3 className="arsenal-card-title text-white font-bold text-xl">{project.title}</h3>
@@ -274,7 +274,7 @@ const Arsenal: React.FC = () => {
                     <span key={i} className="arsenal-card-tag text-xs font-mono text-[#D4AF37] bg-[#D4AF37]/10 px-2 py-1 rounded border border-[#D4AF37]/20">[{t}]</span>
                   ))}
                 </div>
-                <div className="arsenal-card-links flex gap-4 mt-auto">
+                <div className="arsenal-card-links flex flex-wrap gap-4 text-xs mt-4">
                   <a href={project.github} target="_blank" rel="noreferrer" className="arsenal-card-link font-mono text-xs hover:text-[#D4AF37] transition-colors">[ GitHub ]</a>
                 </div>
               </div>

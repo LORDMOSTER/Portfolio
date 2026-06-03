@@ -276,7 +276,7 @@ const Home: React.FC = () => {
         {/* >> SOFT SKILLS */}
         <div className="soft-skills-section">
           <h2 className="soft-skills-header">&gt;&gt; SOFT SKILLS</h2>
-          <div className="soft-skills-grid grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="soft-skills-grid grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
             <div className="skill-float-card premium-card p-4 md:p-6" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
               <h3 className="skill-float-title">Problem Solving</h3>
               <p className="skill-float-desc">Independent block-unblocking and deep documentation parsing.</p>

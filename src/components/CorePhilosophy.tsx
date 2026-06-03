@@ -248,7 +248,7 @@ const CorePhilosophy: React.FC = () => {
       <h3 className="card-title mono-text core-header">// CORE_PHILOSOPHY</h3>
 
       <div
-        className="core-philosophy-holograph"
+        className="core-philosophy-holograph flex flex-col gap-6 md:flex-row"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -271,7 +271,7 @@ const CorePhilosophy: React.FC = () => {
           <ChevronRight size={32} />
         </button>
 
-        <div className="quote-container">
+        <div className="quote-container border-b border-white/5 pb-4 md:border-b-0 md:pb-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
