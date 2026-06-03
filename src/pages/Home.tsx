@@ -1,11 +1,48 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Code, ExternalLink, Terminal, Cpu, Database, Cloud, Briefcase, FileCode, BookOpen } from 'lucide-react';
+import { Code, ExternalLink, Terminal, Cpu, Database, Cloud, Briefcase, FileCode, BookOpen, FileText } from 'lucide-react';
 import heroImage from '../../Image/hero.jpg';
 import CorePhilosophy from '../components/CorePhilosophy';
 import LiveTelemetry from '../components/LiveTelemetry';
 import WorkExperience from '../components/WorkExperience';
 import './Home.css';
+
+// Spotlight helper — call on any card div to track cursor
+const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+  el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+};
+const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+  e.currentTarget.style.setProperty('--spot-x', '-999px');
+  e.currentTarget.style.setProperty('--spot-y', '-999px');
+};
+
+
+const LiquidGauge = ({ fillValue, displayLabel, label, subLabel }: { fillValue: number, displayLabel: string, label: string, subLabel: string }) => {
+  return (
+    <div className="liquid-gauge-item">
+      {/* ring wrapper provides the double gold halo */}
+      <div className="liquid-orb-ring">
+        <div className="liquid-orb">
+          <div className="liquid-fill" style={{ top: `${100 - fillValue}%` }}>
+            <div className="liquid-wave" />
+            <div className="liquid-wave-back" />
+          </div>
+          {/* glare highlight */}
+          <div className="liquid-glare" />
+          {/* percentage label */}
+          <div className="liquid-label-pct">{displayLabel}</div>
+        </div>
+      </div>
+      <div className="liquid-gauge-info">
+        <span className="liquid-gauge-name">{label}</span>
+        <span className="liquid-gauge-sub">{subLabel}</span>
+      </div>
+    </div>
+  );
+};
 
 const Home: React.FC = () => {
   const [activeTab, setActiveTab] = useState('languages');
@@ -82,6 +119,10 @@ const Home: React.FC = () => {
               <BookOpen size={16} />
               <span className="mono-text">Dev.to</span>
             </a>
+            <a href="https://drive.google.com/file/d/1yX403sYRQMWXH0QZ89Ku_3R2HKL0mosW/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="pill-btn">
+              <FileText size={16} />
+              <span className="mono-text">Resume</span>
+            </a>
           </div>
         </div>
 
@@ -128,14 +169,21 @@ const Home: React.FC = () => {
         </div>
 
         <div className="telemetry-dashboard">
-          <div className="card identity-card">
+          <div className="card identity-card premium-card"
+            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+            onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
+          >
             <h3 className="card-title mono-text">What I Build</h3>
             <p className="identity-text">
               Targeting high-scale, real-time architectures. Focused on reducing query latency and optimizing multi-user processing pipelines.
             </p>
           </div>
 
-          <div className="card baseline-card" style={{ backgroundColor: 'rgba(18, 18, 18, 0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <div className="card baseline-card premium-card"
+            style={{ backgroundColor: 'rgba(18, 18, 18, 0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}
+            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+            onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
+          >
             <h3 className="card-title mono-text mb-6">Education</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Row 1 */}
@@ -173,7 +221,7 @@ const Home: React.FC = () => {
 
         <div className="arsenal-module">
           <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">&gt;&gt; TECH_ARSENAL</h3>
-          <div className="arsenal-container card">
+          <div className="arsenal-container card premium-card">
             <div className="arsenal-tabs">
               {Object.entries(arsenalData).map(([key, data]) => (
                 <button
@@ -206,6 +254,46 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* >> LANGUAGES */}
+        <div className="languages-section">
+          <h2 className="languages-header">&gt;&gt; LANGUAGES</h2>
+          <div className="liquid-gauges-row">
+            <LiquidGauge
+              fillValue={55}
+              displayLabel="75%"
+              label="English"
+              subLabel="Professional Working Proficiency"
+            />
+            <LiquidGauge
+              fillValue={70}
+              displayLabel="90%"
+              label="Tamil (Native)"
+              subLabel="Full Duplex — Verbal & Written"
+            />
+          </div>
+        </div>
+
+        {/* >> SOFT SKILLS */}
+        <div className="soft-skills-section">
+          <h2 className="soft-skills-header">&gt;&gt; SOFT SKILLS</h2>
+          <div className="soft-skills-grid">
+            <div className="skill-float-card premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
+              <h3 className="skill-float-title">Problem Solving</h3>
+              <p className="skill-float-desc">Independent block-unblocking and deep documentation parsing.</p>
+            </div>
+            <div className="skill-float-card premium-card">
+              <h3 className="skill-float-title">Technical Leadership</h3>
+              <p className="skill-float-desc">Experience driving team deployments and cloud architecture.</p>
+            </div>
+            <div className="skill-float-card premium-card">
+              <h3 className="skill-float-title">Clean Architecture</h3>
+              <p className="skill-float-desc">Strict adherence to modularity, scalability, and DRY principles.</p>
+            </div>
+          </div>
+        </div>
+
+
 
         {/* Inject Work Experience under Tech Arsenal */}
         <WorkExperience />

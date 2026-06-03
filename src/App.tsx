@@ -10,12 +10,23 @@ import './index.css';
 
 import { useEffect } from 'react';
 
-// Scroll to top on route change
+// Scroll to top and set page title on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Force reset body overflow just in case a previous modal left it stuck
+    document.body.style.overflow = 'auto';
+
+    // Dynamically update document.title
+    const titleMap: Record<string, string> = {
+      '/': 'Home | SRIHARI PV',
+      '/arsenal': 'Arsenal | SRIHARI PV',
+      '/contact': 'Contact | SRIHARI PV',
+      '/trophies': 'Trophies | SRIHARI PV',
+    };
+    document.title = titleMap[pathname] || 'SRIHARI PV';
   }, [pathname]);
 
   return null;
@@ -49,7 +60,7 @@ const AnimatedRoutes = () => {
               exit="out"
               variants={pageVariants}
               transition={pageTransition}
-              style={{ width: '100%', height: '100%', padding: '2rem 4rem' }}
+              style={{ width: '100%', minHeight: '100vh', padding: '2rem 4rem' }}
             >
               <Home />
             </motion.div>
@@ -64,7 +75,7 @@ const AnimatedRoutes = () => {
               exit="out"
               variants={pageVariants}
               transition={pageTransition}
-              style={{ width: '100%', height: '100%', padding: '2rem 4rem' }}
+              style={{ width: '100%', minHeight: '100vh', padding: '2rem 4rem' }}
             >
               <Arsenal />
             </motion.div>
@@ -79,7 +90,7 @@ const AnimatedRoutes = () => {
               exit="out"
               variants={pageVariants}
               transition={pageTransition}
-              style={{ width: '100%', height: '100%', padding: '2rem 4rem' }}
+              style={{ width: '100%', minHeight: '100vh', padding: '2rem 4rem' }}
             >
               <Contact />
             </motion.div>
@@ -94,7 +105,7 @@ const AnimatedRoutes = () => {
               exit="out"
               variants={pageVariants}
               transition={pageTransition}
-              style={{ width: '100%', height: '100%', padding: '2rem 4rem' }}
+              style={{ width: '100%', minHeight: '100vh', padding: '2rem 4rem' }}
             >
               <Trophies />
             </motion.div>

@@ -135,313 +135,109 @@
   z-index: 10;
 }
 
-/* Rest of grid and modal styles */
-.arsenal-grid {
+/* ── New Grid Layout Styles ────────────────────────────── */
+.tier-section {
+  margin-top: 64px;
+  margin-bottom: 64px;
+  width: 100%;
+}
+
+.tier-header {
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.tier1-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
+  width: 100%;
 }
-
 @media (min-width: 768px) {
-  .arsenal-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .tier1-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (min-width: 1024px) {
-  .arsenal-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.tier2-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .tier2-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-.arsenal-card {
-  background-color: rgba(18, 18, 18, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.arsenal-grid-card {
   padding: 24px;
-  border-radius: 12px;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  will-change: transform;
+  height: 100%;
 }
 
-.arsenal-card:hover {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-}
-
-.card-header {
+.arsenal-card-title-group {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-}
-
-.project-icon {
-  color: var(--accent-gold);
-  flex-shrink: 0;
-}
-
-.project-title {
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.project-pitch {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 24px;
-  flex: 1;
-}
-
-.tech-scroll-container {
-  width: 100%;
-  overflow-x: auto;
-  padding-bottom: 8px; 
-}
-
-.tech-scroll-container::-webkit-scrollbar {
-  height: 4px;
-}
-.tech-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
-  border-radius: 4px;
-}
-
-.tech-pills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: nowrap;
-}
-
-.tech-pill {
-  background-color: rgba(10, 10, 10, 0.8);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  color: var(--accent-gold);
-  padding: 4px 10px;
-  border-radius: 16px;
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-/* Modal Styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-}
-
-.modal-content {
-  background-color: #121212;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 900px; /* max-w-4xl */
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative;
-  padding: 40px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-.modal-content::-webkit-scrollbar {
-  width: 8px;
-}
-.modal-content::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
-  border-radius: 4px;
-}
-
-.modal-close {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.3s ease;
-  z-index: 10;
-}
-
-.modal-close:hover {
-  color: var(--accent-gold);
-}
-
-.modal-header {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.modal-title-group {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.modal-title {
-  color: #fff;
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.modal-tech {
-  flex-wrap: wrap; 
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  margin-bottom: 40px;
-}
-
-.section-header {
-  color: var(--accent-gold);
-  font-size: 1rem;
   margin-bottom: 12px;
 }
 
-.section-text {
-  color: #ddd;
-  line-height: 1.7;
-  font-size: 1rem;
-}
-
-.section-text strong {
+.arsenal-card-title {
   color: #fff;
   font-weight: 700;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+  font-size: 1.25rem;
+  margin: 0;
 }
 
-.system-flow-box {
-  background-color: rgba(10, 10, 10, 0.8);
-  border: 1px dashed rgba(212, 175, 55, 0.4);
-  padding: 16px;
-  border-radius: 8px;
-  color: #F5F5F5;
-  font-size: 0.9rem;
-  text-align: center;
-  word-break: break-word;
+.arsenal-card-desc {
+  color: #A0A0A0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  flex-grow: 1;
 }
 
-.modal-footer {
+.arsenal-card-tags {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.source-btn {
-  display: inline-block;
-  background: transparent;
-  border: 1px solid var(--accent-gold);
-  color: var(--accent-gold);
-  padding: 12px 32px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  width: 100%;
-  text-align: center;
-}
-
-.source-btn:hover {
+.arsenal-card-tag {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: #D4AF37;
   background-color: rgba(212, 175, 55, 0.1);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.arsenal-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.arsenal-card-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.arsenal-card-link:hover {
+  color: #D4AF37;
 }
 
 @media (max-width: 640px) {
   .arsenal-page {
     padding: 24px;
   }
-  .modal-content {
-    padding: 24px;
-  }
-  .modal-title {
-    font-size: 1.5rem;
-  }
-}
-
-/* ── Human Walking Figure Animation ────────────────────────────── */
-.walker-figure {
-  animation: walkerBob 0.6s ease-in-out infinite;
-  filter: drop-shadow(0 0 12px rgba(212,175,55,0.35));
-}
-
-@keyframes walkerBob {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-5px); }
-}
-
-/* Thighs — main leg swing from hip */
-.human-thigh-l { animation: thighL 0.6s ease-in-out infinite; transform-box: fill-box; }
-.human-thigh-r { animation: thighR 0.6s ease-in-out infinite; transform-box: fill-box; }
-
-/* Shins — bend from knee (phase-delayed for natural knee flex) */
-.human-shin-l  { animation: shinL  0.6s ease-in-out infinite; transform-box: fill-box; }
-.human-shin-r  { animation: shinR  0.6s ease-in-out infinite; transform-box: fill-box; }
-
-/* Upper arms — opposite to same-side leg */
-.human-arm-l      { animation: armL      0.6s ease-in-out infinite; transform-box: fill-box; }
-.human-arm-r      { animation: armR      0.6s ease-in-out infinite; transform-box: fill-box; }
-
-/* Forearms — slight extra flex from elbow */
-.human-forearm-l  { animation: forearmL  0.6s ease-in-out infinite; transform-box: fill-box; }
-.human-forearm-r  { animation: forearmR  0.6s ease-in-out infinite; transform-box: fill-box; }
-
-@keyframes thighL {
-  0%, 100% { transform: rotate(-28deg); }
-  50%       { transform: rotate(28deg);  }
-}
-@keyframes thighR {
-  0%, 100% { transform: rotate(28deg);  }
-  50%       { transform: rotate(-28deg); }
-}
-@keyframes shinL {
-  0%   { transform: rotate(0deg);   }
-  25%  { transform: rotate(38deg);  }
-  50%  { transform: rotate(0deg);   }
-  75%  { transform: rotate(0deg);   }
-  100% { transform: rotate(0deg);   }
-}
-@keyframes shinR {
-  0%   { transform: rotate(0deg);   }
-  25%  { transform: rotate(0deg);   }
-  50%  { transform: rotate(0deg);   }
-  75%  { transform: rotate(38deg);  }
-  100% { transform: rotate(0deg);   }
-}
-@keyframes armL {
-  0%, 100% { transform: rotate(22deg);  }
-  50%       { transform: rotate(-22deg); }
-}
-@keyframes armR {
-  0%, 100% { transform: rotate(-22deg); }
-  50%       { transform: rotate(22deg);  }
-}
-@keyframes forearmL {
-  0%, 100% { transform: rotate(10deg); }
-  50%       { transform: rotate(28deg); }
-}
-@keyframes forearmR {
-  0%, 100% { transform: rotate(28deg); }
-  50%       { transform: rotate(10deg); }
 }

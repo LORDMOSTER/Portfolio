@@ -17,18 +17,11 @@
 }
 
 .experience-card {
-  background: rgba(18, 18, 18, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 24px;
-  transition: border-color 0.3s ease;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* layout only — visual base comes from .premium-card */
+  --spot-x: -999px;
+  --spot-y: -999px;
 }
 
-.experience-card:hover {
-  border-color: #D4AF37;
-}
 
 .exp-top-row {
   display: flex;

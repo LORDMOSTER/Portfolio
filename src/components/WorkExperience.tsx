@@ -35,9 +35,10 @@ const WorkExperience: React.FC = () => {
         {experiences.map((exp) => (
           <motion.div 
             key={exp.id}
-            className="experience-card"
-            whileHover={{ y: -4 }}
-            transition={{ duration: 0.2 }}
+            className="experience-card premium-card"
+            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+            onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
+            style={{ padding: '24px' }}
           >
             <div className="exp-top-row">
               <h4 className="exp-company">{exp.company}</h4>

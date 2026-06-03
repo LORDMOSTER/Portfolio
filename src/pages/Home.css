@@ -375,18 +375,263 @@
   }
 }
 
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 3rem;
-  }
-  
-  .avatar-container {
-    width: 280px;
-    height: 280px;
-  }
-  
-  .avatar-image {
-    width: 220px;
-    height: 220px;
+}
+
+/* ============================================================
+   >> LANGUAGES — Liquid Gauges
+   ============================================================ */
+
+.languages-section {
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+.languages-header {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 36px;
+}
+
+.liquid-gauges-row {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.liquid-gauge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── Elixir Orb Ring (outer halo only — no overflow issues) ── */
+.liquid-orb-ring {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: grab;
+  /* Double gold halo lives HERE, not on the inner orb */
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.55),
+    0 0 0 7px rgba(212, 175, 55, 0.10),
+    0 10px 40px rgba(0, 0, 0, 0.8);
+  transition: box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liquid-orb-ring:hover {
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 1),
+    0 0 0 9px rgba(212, 175, 55, 0.20),
+    0 14px 50px rgba(212, 175, 55, 0.32);
+  transform: scale(1.07);
+}
+
+.liquid-orb-ring:active {
+  cursor: grabbing;
+  transform: scale(0.94) rotate(-4deg);
+}
+
+/* ── Inner orb: perfectly clipped circle ── */
+.liquid-orb {
+  position: relative;
+  width: 134px;
+  height: 134px;
+  border-radius: 50%;
+  overflow: hidden;            /* clips wave cleanly inside circle */
+  /* Dark amber glass body */
+  background: radial-gradient(
+    circle at 38% 28%,
+    rgba(55, 42, 5, 0.95) 0%,
+    rgba(10, 8, 1, 1) 75%
+  );
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Speed up slosh on ring hover */
+.liquid-orb-ring:hover .liquid-wave      { animation-duration: 1.8s; }
+.liquid-orb-ring:hover .liquid-wave-back { animation-duration: 2.8s; }
+
+/* ── Liquid fill: anchored to BOTTOM of orb ── */
+.liquid-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* top is set inline via style prop: e.g. top: 30% means 70% full */
+}
+
+/* ── Primary bright elixir wave ── */
+.liquid-wave {
+  position: absolute;
+  width: 300%;            /* wide enough to always cover full width when rotating */
+  height: 300%;
+  border-radius: 44%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 215, 50, 0.92) 0%,
+    rgba(200, 155, 15, 1)   55%,
+    rgba(130, 95, 5, 1)     100%
+  );
+  top: -30%;              /* sits above liquid-fill top so bottom portion is solid */
+  left: -100%;
+  animation: liquidSpin 4s linear infinite;
+  transform-origin: center center;
+}
+
+/* ── Secondary deeper shadow wave ── */
+.liquid-wave-back {
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  border-radius: 40%;
+  background: linear-gradient(
+    180deg,
+    rgba(200, 160, 30, 0.55) 0%,
+    rgba(110, 80, 8, 0.9)    100%
+  );
+  top: -22%;
+  left: -100%;
+  animation: liquidSpinReverse 7s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes liquidSpin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes liquidSpinReverse {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+/* ── Glossy glare highlight (top-left) ── */
+.liquid-glare {
+  position: absolute;
+  top: 8%;
+  left: 12%;
+  width: 40%;
+  height: 30%;
+  background: radial-gradient(
+    ellipse at 40% 35%,
+    rgba(255, 255, 230, 0.5) 0%,
+    rgba(255, 255, 200, 0.08) 65%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 20;
+  transform: rotate(-18deg);
+}
+
+/* ── Percentage label ── */
+.liquid-label-pct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow:
+    0 0 14px rgba(255, 185, 0, 0.95),
+    0 2px 8px rgba(0, 0, 0, 1);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* ── Info below orb ── */
+.liquid-gauge-info {
+  text-align: center;
+}
+
+.liquid-gauge-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  display: block;
+}
+
+.liquid-gauge-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+  max-width: 148px;
+  line-height: 1.4;
+}
+
+
+
+/* ============================================================
+   >> SOFT SKILLS — Floating Cards (3 in a row)
+   ============================================================ */
+
+.soft-skills-section {
+  margin-bottom: 80px;
+}
+
+.soft-skills-header {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 36px;
+}
+
+.soft-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 900px) {
+  .soft-skills-grid {
+    grid-template-columns: 1fr;
   }
 }
+
+/* Skill cards — use premium-card base (no floating) */
+.skill-float-card {
+  padding: 28px 24px;
+  /* spotlight position driven by mousemove JS */
+  --spot-x: -999px;
+  --spot-y: -999px;
+}
+
+.skill-float-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.skill-float-card:hover .skill-float-title {
+  color: var(--accent-gold);
+}
+
+.skill-float-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+

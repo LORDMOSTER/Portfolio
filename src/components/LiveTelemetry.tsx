@@ -126,7 +126,10 @@ const LiveTelemetry: React.FC = () => {
       
       <div className="telemetry-grid">
         {/* LEETCODE COLUMN */}
-        <div className="telemetry-card card">
+        <div className="telemetry-card premium-card"
+          onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+          onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
+        >
           <div className="t-card-header">
             <span className="mono-text">&gt;_ LeetCode_Metrics</span>
           </div>
@@ -183,7 +186,10 @@ const LiveTelemetry: React.FC = () => {
         </div>
 
         {/* GITHUB COLUMN */}
-        <div className="telemetry-card card relative">
+        <div className="telemetry-card premium-card relative"
+          onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+          onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
+        >
           <div className="t-card-header flex-between">
             <span className="mono-text">&gt;_ GitHub_Contributions</span>
             <div className="live-status mono-text">

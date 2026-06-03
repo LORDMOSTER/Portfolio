@@ -23,13 +23,13 @@
 }
 
 .telemetry-card {
-  background-color: rgba(18, 18, 18, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  overflow: hidden;
+  /* layout only — visual base comes from .premium-card */
+  --spot-x: -999px;
+  --spot-y: -999px;
   display: flex;
   flex-direction: column;
 }
+
 
 .t-card-header {
   background-color: rgba(10, 10, 10, 0.6);

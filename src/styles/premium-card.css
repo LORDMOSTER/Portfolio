@@ -1,0 +1,98 @@
+/* ============================================================
+   PREMIUM CARD — shared across all major sections
+   Border-Beam hover effect: a glowing gold light travels 
+   around the card perimeter on hover instead of a spotlight.
+   ============================================================ */
+
+.premium-card {
+  position: relative;
+  background: rgba(16, 16, 16, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 18px;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.premium-card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow:
+    0 24px 60px -16px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(212, 175, 55, 0.08);
+}
+
+/* All card children must be above pseudo-elements */
+.premium-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 
+  Border beam: a rotating conic gradient sits behind 
+  the card as a pseudo-element slightly larger than the card.
+  On hover it animates, making a gold beam travel the perimeter.
+*/
+.premium-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  background: conic-gradient(
+    from var(--beam-angle, 0deg),
+    transparent 0%,
+    transparent 30%,
+    rgba(212, 175, 55, 0.85) 45%,
+    rgba(255, 230, 100, 1) 50%,
+    rgba(212, 175, 55, 0.85) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+  /* mask so only the 2px border ring is visible */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px;
+}
+
+.premium-card:hover::before {
+  opacity: 1;
+  animation: beamSpin 2.2s linear infinite;
+}
+
+@property --beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes beamSpin {
+  0%   { --beam-angle: 0deg; }
+  100% { --beam-angle: 360deg; }
+}
+
+/* Bottom accent sweep */
+.premium-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(212,175,55,0.9), transparent);
+  transition: width 0.55s ease;
+  z-index: 2;
+}
+
+.premium-card:hover::after {
+  width: 100%;
+}

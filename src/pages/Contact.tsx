@@ -3,6 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, CheckCircle2, AlertCircle, Send, Mail, Phone } from 'lucide-react';
 import './Contact.css';
 
+const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+  el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+};
+
+const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+  const el = e.currentTarget;
+  el.style.setProperty('--spot-x', `-999px`);
+  el.style.setProperty('--spot-y', `-999px`);
+};
+
 const Contact: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -57,7 +70,7 @@ const Contact: React.FC = () => {
             </a>
           </div>
 
-          <div className="status-bento card">
+          <div className="status-bento premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
             <h3 className="bento-title mono-text">Availability & Status</h3>
             <ul className="bento-list">
               <li>
@@ -77,7 +90,7 @@ const Contact: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: The Simplified Form */}
-        <div className="terminal-container card">
+        <div className="terminal-container premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
           <div className="terminal-header">
             <div className="terminal-buttons">
               <span className="t-btn close"></span>

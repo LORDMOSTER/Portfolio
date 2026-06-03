@@ -1,7 +1,21 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { Crown, Medal } from 'lucide-react';
 import './Trophies.css';
+
+/* ── Global Handlers ────────────────────────────────────────────── */
+const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+  el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+};
+
+const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+  const el = e.currentTarget;
+  el.style.setProperty('--spot-x', `-999px`);
+  el.style.setProperty('--spot-y', `-999px`);
+};
 
 /* ── Data ───────────────────────────────────────────────────────── */
 const apexAchievements = [
@@ -314,12 +328,91 @@ const MatrixTrophy: React.FC = () => {
   );
 };
 
+const HoloCard: React.FC<{
+  title: string;
+  detail: string;
+  Icon: React.ElementType;
+}> = ({ title, detail, Icon }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth out the mouse values
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  // Map mouse position to rotation (-10 to 10 degrees)
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  // Dynamic glare based on mouse position
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["100%", "0%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["100%", "0%"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Normalize coordinates (-0.5 to 0.5)
+    const xPct = (mouseX / width) - 0.5;
+    const yPct = (mouseY / height) - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <div className="holo-wrapper" style={{ perspective: 1000 }}>
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="holo-card"
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+      >
+        {/* Animated Border Beam */}
+        <div className="holo-border-beam" />
+        
+        {/* Content Container (lifted off card base) */}
+        <div className="holo-content" style={{ transform: "translateZ(30px)" }}>
+          <div className="holo-icon-wrap">
+            <Icon size={24} color="#D4AF37" strokeWidth={1.5} />
+          </div>
+          <div className="holo-text-group">
+            <p className="holo-title">{title}</p>
+            <p className="holo-detail">{detail}</p>
+          </div>
+        </div>
+
+        {/* Dynamic Glare Layer */}
+        <motion.div
+          className="holo-glare"
+          style={{
+            background: useTransform(
+              () => `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, 0.15) 0%, transparent 60%)`
+            ),
+          }}
+        />
+      </motion.div>
+    </div>
+  );
+};
+
 /* ── Main Component ─────────────────────────────────────────────── */
 const Trophies: React.FC = () => {
-  React.useEffect(() => {
-    document.title = 'Hall of Records | SRIHARI PV';
-  }, []);
-
   return (
     <div className="trophies-page">
 
@@ -340,15 +433,7 @@ const Trophies: React.FC = () => {
       <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// APEX_ACHIEVEMENTS</p>
       <div className="apex-grid">
         {apexAchievements.map(({ id, title, detail, Icon }) => (
-          <div key={id} className="apex-card">
-            <div className="apex-icon-wrap">
-              <Icon size={22} color="#D4AF37" strokeWidth={1.5} />
-            </div>
-            <div>
-              <p className="apex-title">{title}</p>
-              <p className="apex-detail">{detail}</p>
-            </div>
-          </div>
+          <HoloCard key={id} title={title} detail={detail} Icon={Icon} />
         ))}
       </div>
 
@@ -356,7 +441,7 @@ const Trophies: React.FC = () => {
       <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// VALIDATED_CREDENTIALS</p>
       <div className="cert-grid">
         {certifications.map((cert) => (
-          <div key={cert.id} className="cert-card">
+          <div key={cert.id} className="cert-card premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
             <GeoSeal seal={cert.seal} />
             <div className="cert-issuer-badge">{cert.issuer}</div>
             <p className="cert-title">{cert.title}</p>
@@ -374,7 +459,7 @@ const Trophies: React.FC = () => {
             {group.entries.map((entry, i) => (
               <div key={i} className="combat-entry">
                 <div className="combat-connector" />
-                <div className="combat-block">
+                <div className="combat-block premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
                   <p className="combat-title">
                     {entry.title}
                     {entry.prize && <span className="combat-prize">{entry.prize}</span>}
