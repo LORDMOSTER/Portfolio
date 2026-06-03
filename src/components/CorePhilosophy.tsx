@@ -252,8 +252,8 @@ const CorePhilosophy: React.FC = () => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <span className="holograph-bracket left mono-text">[</span>
-        <span className="holograph-bracket right mono-text">]</span>
+        <span className="holograph-bracket left mono-text hidden md:inline-block">[</span>
+        <span className="holograph-bracket right mono-text hidden md:inline-block">]</span>
 
         <button
           className="stealth-nav-btn prev-btn"
@@ -279,7 +279,7 @@ const CorePhilosophy: React.FC = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="philosophy-text mono-text"
+              className="philosophy-text mono-text border-l-2 border-[#D4AF37] pl-4 py-2 my-2 md:border-none md:p-0 md:m-0 text-left md:text-center italic md:not-italic"
               style={{ transformOrigin: 'center' }}
             >
               {engineeringTruthsVol2[currentIndex]}

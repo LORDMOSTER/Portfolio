@@ -222,7 +222,7 @@ const Home: React.FC = () => {
         <div className="arsenal-module">
           <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">&gt;&gt; TECH_ARSENAL</h3>
           <div className="arsenal-container card premium-card">
-            <div className="arsenal-tabs">
+            <div className="arsenal-tabs flex overflow-x-auto whitespace-nowrap scrollbar-hide w-full">
               {Object.entries(arsenalData).map(([key, data]) => (
                 <button
                   key={key}
@@ -241,7 +241,7 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="skills-grid"
+                className="skills-grid flex flex-wrap gap-3 justify-start"
               >
                 {arsenalData[activeTab as keyof typeof arsenalData].items.map((item, idx) => (
                   <div key={idx} className="skill-node">

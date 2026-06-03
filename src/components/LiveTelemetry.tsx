@@ -124,9 +124,9 @@ const LiveTelemetry: React.FC = () => {
     <div className="telemetry-section">
       <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">[ LIVE_TELEMETRY ]</h3>
       
-      <div className="telemetry-grid">
+      <div className="telemetry-grid flex flex-col md:flex-row gap-6 w-full">
         {/* LEETCODE COLUMN */}
-        <div className="telemetry-card premium-card"
+        <div className="telemetry-card premium-card w-full p-5 md:p-6"
           onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
           onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
         >
@@ -163,20 +163,20 @@ const LiveTelemetry: React.FC = () => {
                   
                   <div className="lc-stats mono-text">
                     <div className="stat-line">
-                      <span className="stat-key">User:</span>
-                      <span className="stat-val">{lcData?.user}</span>
+                      <span className="stat-key break-words">User:</span>
+                      <span className="stat-val break-words">{lcData?.user}</span>
                     </div>
                     <div className="stat-line">
-                      <span className="stat-key">Peak Rating:</span>
-                      <span className="stat-val">{lcData?.peakRating}</span>
+                      <span className="stat-key break-words">Peak Rating:</span>
+                      <span className="stat-val break-words">{lcData?.peakRating}</span>
                     </div>
                     <div className="stat-line">
-                      <span className="stat-key">Problems Solved:</span>
-                      <span className="stat-val">{lcData?.solved}</span>
+                      <span className="stat-key break-words">Problems Solved:</span>
+                      <span className="stat-val break-words">{lcData?.solved}</span>
                     </div>
                     <div className="stat-line">
-                      <span className="stat-key">Global Rank:</span>
-                      <span className="stat-val gold-text">{lcData?.rank}</span>
+                      <span className="stat-key break-words">Global Rank:</span>
+                      <span className="stat-val gold-text break-words">{lcData?.rank}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -186,7 +186,7 @@ const LiveTelemetry: React.FC = () => {
         </div>
 
         {/* GITHUB COLUMN */}
-        <div className="telemetry-card premium-card relative"
+        <div className="telemetry-card premium-card relative w-full p-5 md:p-6"
           onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
           onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
         >

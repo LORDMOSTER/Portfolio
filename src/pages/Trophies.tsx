@@ -414,7 +414,7 @@ const HoloCard: React.FC<{
 /* ── Main Component ─────────────────────────────────────────────── */
 const Trophies: React.FC = () => {
   return (
-    <div className="trophies-page">
+    <div className="trophies-page px-4 md:px-0 w-full overflow-x-hidden">
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <div className="trophies-hero">
@@ -431,7 +431,7 @@ const Trophies: React.FC = () => {
 
       {/* ── Apex Achievements ────────────────────────────────────── */}
       <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// APEX_ACHIEVEMENTS</p>
-      <div className="apex-grid">
+      <div className="apex-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {apexAchievements.map(({ id, title, detail, Icon }) => (
           <HoloCard key={id} title={title} detail={detail} Icon={Icon} />
         ))}
@@ -452,7 +452,7 @@ const Trophies: React.FC = () => {
 
       {/* ── Combat Log ───────────────────────────────────────────── */}
       <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text mt-16">// COMPETITIVE_PODIUMS</p>
-      <div className="combat-log">
+      <div className="combat-log w-full flex flex-col gap-4">
         {combatLog.map((group) => (
           <div key={group.year} className="combat-year-group">
             <div className="combat-year-header">[ {group.year} ]</div>

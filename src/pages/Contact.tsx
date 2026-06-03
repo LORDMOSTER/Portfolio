@@ -90,7 +90,7 @@ const Contact: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: The Simplified Form */}
-        <div className="terminal-container premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
+        <div className="terminal-container premium-card mx-4 md:mx-0 w-auto md:w-full" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
           <div className="terminal-header">
             <div className="terminal-buttons">
               <span className="t-btn close"></span>
@@ -120,7 +120,7 @@ const Contact: React.FC = () => {
                     type="text" 
                     id="name" 
                     name="name" 
-                    className="terminal-input mono-text" 
+                    className="terminal-input mono-text w-full p-3 mb-4" 
                     placeholder="Enter your name..."
                     required 
                     disabled={status === 'submitting'}
@@ -136,7 +136,7 @@ const Contact: React.FC = () => {
                     type="email" 
                     id="email" 
                     name="email" 
-                    className="terminal-input mono-text" 
+                    className="terminal-input mono-text w-full p-3 mb-4" 
                     placeholder="Enter your email..."
                     required 
                     disabled={status === 'submitting'}
@@ -151,7 +151,7 @@ const Contact: React.FC = () => {
                   <textarea 
                     id="message" 
                     name="message" 
-                    className="terminal-input mono-text" 
+                    className="terminal-input mono-text w-full min-h-[120px] p-3 text-base resize-y" 
                     rows={4}
                     placeholder="Type your message..."
                     required
@@ -163,7 +163,7 @@ const Contact: React.FC = () => {
 
               <button 
                 type="submit" 
-                className="execute-btn mono-text"
+                className="execute-btn mono-text w-full md:w-auto mt-4"
                 disabled={status === 'submitting'}
               >
                 <Send size={16} />

@@ -233,17 +233,17 @@ const Arsenal: React.FC = () => {
       {/* ── Grid Layout ─────────────────────────────────────────── */}
       <div className="tier-section">
         <h2 className="tier-header mb-8 text-2xl font-bold text-[#D4AF37] font-mono tracking-wider">&gt;&gt; TIER_1: CORE_SYSTEMS</h2>
-        <div className="tier1-grid grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-16">
+        <div className="tier1-grid grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-0 w-full mb-16">
           {tier1Projects.map(project => {
             const Icon = project.icon;
             return (
-              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-4 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
+              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-5 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
                 <div className="arsenal-card-title-group flex items-center mb-2 gap-3">
                   <Icon className="project-icon text-[#D4AF37]" size={24} />
                   <h3 className="arsenal-card-title text-white font-bold text-xl">{project.title}</h3>
                 </div>
                 <p className="arsenal-card-desc text-[#A0A0A0] text-sm mb-6 flex-grow">{project.description}</p>
-                <div className="arsenal-card-tags flex flex-wrap gap-2 mb-4">
+                <div className="arsenal-card-tags flex flex-wrap gap-2 mt-3 mb-4">
                   {project.tech.map((t, i) => (
                     <span key={i} className="arsenal-card-tag text-xs font-mono text-[#D4AF37] bg-[#D4AF37]/10 px-2 py-1 rounded border border-[#D4AF37]/20">[{t}]</span>
                   ))}
@@ -259,17 +259,17 @@ const Arsenal: React.FC = () => {
 
       <div className="tier-section">
         <h2 className="tier-header mb-8 text-2xl font-bold text-[#D4AF37] font-mono tracking-wider">&gt;&gt; TIER_2: UTILITIES &amp; SCRIPTS</h2>
-        <div className="tier2-grid grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="tier2-grid grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-0 w-full">
           {tier2Projects.map(project => {
             const Icon = project.icon;
             return (
-              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-4 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
+              <div key={project.id} className="premium-card bg-[#121212]/50 border border-white/10 p-5 md:p-6 rounded-xl hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col arsenal-grid-card">
                 <div className="arsenal-card-title-group flex items-center mb-2 gap-3">
                   <Icon className="project-icon text-[#D4AF37]" size={20} />
                   <h3 className="arsenal-card-title text-white font-bold text-xl">{project.title}</h3>
                 </div>
                 <p className="arsenal-card-desc text-[#A0A0A0] text-sm mb-6 flex-grow">{project.description}</p>
-                <div className="arsenal-card-tags flex flex-wrap gap-2 mb-4">
+                <div className="arsenal-card-tags flex flex-wrap gap-2 mt-3 mb-4">
                   {project.tech.map((t, i) => (
                     <span key={i} className="arsenal-card-tag text-xs font-mono text-[#D4AF37] bg-[#D4AF37]/10 px-2 py-1 rounded border border-[#D4AF37]/20">[{t}]</span>
                   ))}
