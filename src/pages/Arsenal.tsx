@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, Map, Coffee, MessageSquare, Brain, Terminal, Smile, Gamepad2, Palette, X, Music } from 'lucide-react';
+import { Mic, Map, Coffee, MessageSquare, Brain, Terminal, Smile, Gamepad2, Palette, Music } from 'lucide-react';
 import './Arsenal.css';
 
 /* ─── Mathematical Reactor Core ──────────────────────────────────────
