@@ -53,8 +53,8 @@
 }
 
 .hero-description {
-  max-width: 48rem; /* max-w-3xl */
-  color: #9CA3AF; /* text-gray-400 */
+  max-width: 48rem;
+  color: #9CA3AF;
   line-height: 1.6;
   font-size: 1rem;
 }
@@ -86,7 +86,7 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding-bottom: 8px; /* space for scrollbar */
+  padding-bottom: 8px;
 }
 
 .filter-ribbon::-webkit-scrollbar {
@@ -115,7 +115,7 @@
 
 .filter-pill.active {
   color: #fff;
-  border-color: transparent; /* hide default border when active to let active bg border show */
+  border-color: transparent;
 }
 
 .filter-active-bg {

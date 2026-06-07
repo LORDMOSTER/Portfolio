@@ -49,6 +49,76 @@
   100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
 }
 
+/* ── Ghost Hint — terminal discovery cue ──────────────── */
+.ghost-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer !important;
+  /* Start near-invisible; hover brightens */
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+  /* Negative margin to tuck up under the badge */
+  margin-top: -10px;
+  margin-bottom: -8px;
+}
+
+.ghost-hint:hover {
+  opacity: 1;
+}
+
+.ghost-hint-key {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #555;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #2a2a2a;
+  border-bottom: 2px solid #2a2a2a;
+  border-radius: 3px;
+  padding: 2px 5px;
+  letter-spacing: 0.06em;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.ghost-hint:hover .ghost-hint-key {
+  border-color: rgba(212,175,55,0.4);
+  color: var(--accent-gold);
+}
+
+.ghost-hint-sep {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #333;
+}
+
+.ghost-hint-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: #444;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.ghost-hint:hover .ghost-hint-label {
+  color: rgba(212,175,55,0.6);
+}
+
+/* ── Kinetic Ribbon section divider ─────────────────── */
+.kinetic-ribbon-section {
+  /* Strict overflow guard — this is the primary safety net */
+  overflow: hidden;
+  width: 100%;
+  /* Subtle separator lines above and below */
+  border-top: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+  margin: -24px 0;
+  /* Negative vertical margin pulls it closer to hero/identity */
+}
+
 .hero-title {
   font-size: 5rem;
   font-weight: 700;
@@ -338,11 +408,16 @@
   padding: 8px 16px;
   border-radius: 4px;
   border: 1px solid transparent;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  /* Affordance — makes draggability obvious */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .skill-node:hover {
-  border-color: var(--border-color);
+  border-color: rgba(212,175,55,0.35);
+  box-shadow: 0 0 12px rgba(212,175,55,0.1);
 }
 
 .node-bracket {

@@ -5,7 +5,56 @@
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
+
+/* ── Terminal Launch Button ────────────────────────── */
+.terminal-launch-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  background-color: rgba(212, 175, 55, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 32px;
+  color: #D4AF37;
+  cursor: pointer;
+  width: 64px;
+  overflow: hidden;
+  transition: width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 12px rgba(212,175,55,0.15);
+}
+
+.terminal-launch-btn:hover {
+  background-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 20px rgba(212,175,55,0.35);
+  width: 192px;
+}
+
+.terminal-launch-btn:hover .nav-label {
+  opacity: 1;
+}
+
+.terminal-launch-btn .nav-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #D4AF37;
+}
+
+@media (max-width: 768px) {
+  .terminal-launch-btn {
+    display: none;
+  }
+}
+
+
 
 .floating-nav {
   display: flex;
@@ -81,6 +130,36 @@
   border-radius: 50%;
   background-color: var(--accent-gold);
   box-shadow: 0 0 10px 2px rgba(212, 175, 55, 0.6);
+}
+
+/* ── Audio Toggle ─────────────────────────────────── */
+.nav-divider {
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 4px auto;
+}
+
+.nav-audio-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer !important;
+  padding: 10px;
+}
+
+.nav-audio-btn.audio-on {
+  color: var(--accent-gold);
+}
+
+.nav-audio-btn.audio-on .nav-icon {
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 6px rgba(212,175,55,0.6));
+}
+
+.nav-audio-btn.audio-off {
+  color: var(--text-muted);
+  opacity: 0.5;
 }
 
 @media (max-width: 768px) {

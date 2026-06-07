@@ -1,7 +1,8 @@
 /* ============================================================
    PREMIUM CARD — shared across all major sections
-   Border-Beam hover effect: a glowing gold light travels 
-   around the card perimeter on hover instead of a spotlight.
+   Upgraded: Lens flare + Chromatic Aberration on hover.
+   Tracks --mouse-x (0→1) set by JS mousemove handlers.
+   The box-shadow shifts red on left edge, cyan on right edge.
    ============================================================ */
 
 .premium-card {
@@ -12,18 +13,38 @@
   overflow: hidden;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+
+  /* CSS custom properties for chromatic aberration */
+  --mouse-x: 0.5;
+
   transition:
     border-color 0.4s ease,
     box-shadow 0.4s ease,
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ── Chromatic Aberration on hover ─────────────────────────── */
+/*
+  When mouse-x < 0.5 → left-heavy → red shadow bleeds left
+  When mouse-x > 0.5 → right-heavy → cyan shadow bleeds right
+  Achieved with two layered box-shadows that shift dynamically.
+  We use a CSS @property + paint-worklet-free approach:
+  The JS sets --mouse-x and CSS calc() drives the shadow offsets.
+*/
+
 .premium-card:hover {
   border-color: rgba(212, 175, 55, 0.45);
   transform: translateY(-6px) scale(1.01);
   box-shadow:
+    /* Base depth shadow */
     0 24px 60px -16px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(212, 175, 55, 0.08);
+    0 0 0 1px rgba(212, 175, 55, 0.08),
+    /* Chromatic RED — shifts left when mouse is on left side */
+    calc((var(--mouse-x, 0.5) - 0.5) * -24px) 0px 18px -4px rgba(255, 50, 50, 0.35),
+    /* Chromatic CYAN — shifts right when mouse is on right side */
+    calc((var(--mouse-x, 0.5) - 0.5) * 24px) 0px 18px -4px rgba(0, 200, 255, 0.28),
+    /* Gold center glow — always present on hover */
+    0 0 28px -8px rgba(212, 175, 55, 0.15);
 }
 
 /* All card children must be above pseudo-elements */
@@ -80,19 +101,23 @@
   100% { --beam-angle: 360deg; }
 }
 
-/* Bottom accent sweep */
+/* ── Lens flare inner glow ─────────────────────────────────── */
+/*
+  A radial spotlight that follows the mouse position.
+  --spot-x and --spot-y are set by JS.
+*/
 .premium-card::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(212,175,55,0.9), transparent);
-  transition: width 0.55s ease;
-  z-index: 2;
-}
-
-.premium-card:hover::after {
-  width: 100%;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 120px at var(--spot-x, -999px) var(--spot-y, -999px),
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(212, 175, 55, 0.04) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s;
 }

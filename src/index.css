@@ -83,7 +83,7 @@ ul {
 @media (max-width: 768px) {
   .main-content {
     padding-left: 0;
-    padding-bottom: 100px; /* Space for bottom floating dock */
+    padding-bottom: 128px; /* Space for bottom floating dock + sys-log footer */
   }
 }
 
@@ -107,12 +107,166 @@ ul {
 .text-2xl { font-size: 1.5rem; line-height: 2rem; }
 .font-bold { font-weight: 700; }
 .text-\[\#D4AF37\] { color: #D4AF37; }
+.text-gold { color: var(--accent-gold); }
 .uppercase { text-transform: uppercase; }
 .tracking-wider { letter-spacing: 0.05em; }
 .mb-6 { margin-bottom: 1.5rem; }
 .mt-16 { margin-top: 4rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.w-full { width: 100%; }
+.overflow-x-hidden { overflow-x: hidden; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.gap-6 { gap: 1.5rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.relative { position: relative; }
 
 @media (min-width: 768px) {
   .md\:text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+  .md\:px-0 { padding-left: 0; padding-right: 0; }
+  .md\:flex-row { flex-direction: row; }
+  .md\:p-6 { padding: 1.5rem; }
+}
+
+/* Additional utilities */
+.justify-start { justify-content: flex-start; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-3 { gap: 0.75rem; }
+.whitespace-nowrap { white-space: nowrap; }
+.overflow-x-auto { overflow-x: auto; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+@media (min-width: 768px) {
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:gap-8 { gap: 2rem; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   X-RAY / WIREFRAME MODE — sudo view --xray
+   Activated by .xray-mode on <body>
+════════════════════════════════════════════════════════════ */
+body.xray-mode {
+  /* Soft cyan tint to signal the mode */
+  background-color: #020408 !important;
+  background-image: none !important;
+  transition: background-color 0.4s ease;
+}
+
+/* Every element: transparent bg, gold structural border */
+body.xray-mode *:not(script):not(style):not(canvas):not(.matrix-rain-overlay):not(.matrix-canvas) {
+  background-color: transparent !important;
+  background-image: none !important;
+  outline: 1px solid rgba(212, 175, 55, 0.22) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition:
+    background-color 0.3s ease,
+    outline 0.3s ease;
+}
+
+/* Text stays readable in xray */
+body.xray-mode * {
+  color: rgba(212, 175, 55, 0.7) !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+}
+
+/* Headings pop a bit brighter */
+body.xray-mode h1,
+body.xray-mode h2,
+body.xray-mode h3 {
+  color: rgba(212, 175, 55, 1) !important;
+  letter-spacing: 0.08em;
+}
+
+/* Border-style separator lines remain distinct */
+body.xray-mode hr,
+body.xray-mode .timeline-spine,
+body.xray-mode .timeline-trace {
+  border-color: rgba(212, 175, 55, 0.5) !important;
+}
+
+/* The terminal panel itself stays readable */
+body.xray-mode .terminal-panel {
+  outline: 2px solid rgba(212, 175, 55, 0.8) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIGHT MODE — theme --light
+   Warm ivory palette. Not harsh white.
+════════════════════════════════════════════════════════════ */
+body.light-mode {
+  --bg-surface: #F5F0E8;
+  --bg-card:    #EDEADE;
+  --border-color: #D4C9B0;
+  --text-main:  #1A1A1A;
+  --text-muted: #5A5040;
+  --accent-gold: #B8860B;
+  --accent-gold-dark: #9A6E00;
+
+  background-color: #F5F0E8 !important;
+  background-image: radial-gradient(#D4C9B0 1px, transparent 1px) !important;
+  color: #1A1A1A !important;
+}
+
+/* Cards & surfaces in light mode */
+body.light-mode .premium-card,
+body.light-mode .arsenal-grid-card,
+body.light-mode .card {
+  background-color: #EDEADE !important;
+  border-color: #D4C9B0 !important;
+  color: #1A1A1A !important;
+}
+
+/* Text overrides */
+body.light-mode .arsenal-card-desc,
+body.light-mode p,
+body.light-mode .hero-description {
+  color: #4A3F30 !important;
+}
+
+/* Nav pill */
+body.light-mode .floating-nav {
+  background-color: rgba(237, 234, 222, 0.85) !important;
+  border-color: #D4C9B0 !important;
+}
+
+body.light-mode .nav-item {
+  color: #5A5040 !important;
+}
+
+body.light-mode .nav-item:hover,
+body.light-mode .nav-item.active {
+  color: #B8860B !important;
+  background-color: rgba(184, 134, 11, 0.08) !important;
+}
+
+/* Terminal button */
+body.light-mode .terminal-launch-btn {
+  background-color: rgba(184, 134, 11, 0.10) !important;
+  border-color: rgba(184, 134, 11, 0.45) !important;
+  color: #B8860B !important;
+}
+
+/* Terminal panel */
+body.light-mode .terminal-panel {
+  background-color: #1A1410 !important;
+  border-color: #B8860B !important;
+}
+
+/* System log footer */
+body.light-mode .sys-log-footer {
+  background-color: rgba(237, 234, 222, 0.9) !important;
+  border-color: #D4C9B0 !important;
+  color: #5A5040 !important;
+}
+
+/* Scrollbar in light mode */
+body.light-mode ::-webkit-scrollbar-track {
+  background: #F5F0E8;
+}
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: #D4C9B0;
 }
 

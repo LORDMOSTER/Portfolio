@@ -1,24 +1,49 @@
-import React from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useScroll,
+  useInView,
+} from 'framer-motion';
 import { Crown, Medal } from 'lucide-react';
 import './Trophies.css';
 
-/* ── Global Handlers ────────────────────────────────────────────── */
-const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
-  const el = e.currentTarget;
-  const r = el.getBoundingClientRect();
-  el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
-  el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
-};
+/* ─────────────────────────────────────────────────────────────────
+   TYPES
+───────────────────────────────────────────────────────────────── */
+type Seal = 'GOLD' | 'SILVER' | 'ELITE' | 'COMPLETED' | null;
 
-const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-  const el = e.currentTarget;
-  el.style.setProperty('--spot-x', `-999px`);
-  el.style.setProperty('--spot-y', `-999px`);
-};
+interface CertData {
+  id: number;
+  title: string;
+  issuer: string;
+  detail?: string;
+  seal: Seal;
+}
 
-/* ── Data ───────────────────────────────────────────────────────── */
-const apexAchievements = [
+interface AwardEntry {
+  title: string;
+  prize?: string;
+}
+
+interface YearGroup {
+  year: string;
+  entries: AwardEntry[];
+}
+
+interface ApexAchievement {
+  id: number;
+  title: string;
+  detail: string;
+  Icon: React.ElementType;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────────────────────────── */
+const apexAchievements: ApexAchievement[] = [
   {
     id: 1,
     title: '[ BEST PERFORMER OF THE YEAR : 2025-26 ]',
@@ -32,16 +57,6 @@ const apexAchievements = [
     Icon: Medal,
   },
 ];
-
-type Seal = 'GOLD' | 'SILVER' | 'ELITE' | 'COMPLETED' | null;
-
-interface CertData {
-  id: number;
-  title: string;
-  issuer: string;
-  detail?: string;
-  seal: Seal;
-}
 
 const certifications: CertData[] = [
   {
@@ -57,21 +72,11 @@ const certifications: CertData[] = [
   { id: 5, title: 'Database Management Systems',issuer: 'NPTEL', seal: 'COMPLETED' },
 ];
 
-interface AwardEntry {
-  title: string;
-  prize?: string;
-}
-
-interface YearGroup {
-  year: string;
-  entries: AwardEntry[];
-}
-
 const combatLog: YearGroup[] = [
   {
     year: '2026',
     entries: [
-      { title: 'VIDYAM \'26 (Vidyaa Vikas)', prize: 'Winner — Paper Presentation' },
+      { title: "VIDYAM '26 (Vidyaa Vikas)", prize: 'Winner — Paper Presentation' },
       { title: "Nandha's Innovation Day '26", prize: 'Winner — Project Presentation "ZING: The Smart Canteen"' },
     ],
   },
@@ -97,31 +102,123 @@ const combatLog: YearGroup[] = [
   },
 ];
 
-/* ── Geometric Seal Component ───────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   UPGRADED CRYPTO SCRAMBLE HOOK — v2
+   Four-phase decryption sequence:
+     0–25%  → Hex literals     (0x8F2, 0x1A4 …)
+     25–50% → Binary glitches  (01101011 …)
+     50–75% → System jargon   (SYS.ALLOC, AWAIT_DECRYPT …)
+     75–100%→ Char-by-char real text reveal
+───────────────────────────────────────────────────────────────── */
+const HEX_CHARS   = '0123456789ABCDEF';
+const BIN_CHARS   = '01';
+const JARGON_POOL = [
+  'SYS.ALLOC',
+  'AWAITING_DECRYPT',
+  'MEM_FAULT',
+  'KERNEL_INIT',
+  'BUFFER_FLUSH',
+  'NULL_REF',
+  'ACCESS_DENIED',
+  'CHECKSUM',
+  'STACK_TRACE',
+  'SEGFAULT',
+];
+
+function randFrom(str: string) {
+  return str[Math.floor(Math.random() * str.length)];
+}
+
+function useCryptoReveal(target: string, triggered: boolean) {
+  const [display, setDisplay] = useState(() => target.replace(/[^ ]/g, '█'));
+  const frameRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const iterRef  = useRef(0);
+
+  useEffect(() => {
+    if (!triggered) return;
+    iterRef.current = 0;
+
+    // Total frames: each char gets ~5 frames to play with
+    const totalIter = target.length * 5;
+
+    const step = () => {
+      iterRef.current++;
+      const progress    = iterRef.current / totalIter;    // 0 → 1
+      const revealedIdx = Math.floor(progress * target.length); // chars fully revealed
+
+      setDisplay(
+        target
+          .split('')
+          .map((char, idx) => {
+            // Already revealed characters
+            if (char === ' ') return ' ';
+            if (idx < revealedIdx) return char;
+
+            // Per-character local phase (0→1 within this char's "window")
+            const charProgress = Math.min(1, (progress - idx / target.length) * target.length);
+
+            if (charProgress < 0.25) {
+              // Phase 1 — Hex: "0x" + 3 hex chars
+              return `0x${randFrom(HEX_CHARS)}${randFrom(HEX_CHARS)}${randFrom(HEX_CHARS)}`.charAt(
+                Math.floor(Math.random() * 5),
+              );
+            } else if (charProgress < 0.50) {
+              // Phase 2 — Binary
+              return randFrom(BIN_CHARS);
+            } else if (charProgress < 0.75) {
+              // Phase 3 — System jargon (pick a random char from a random word)
+              const word = JARGON_POOL[Math.floor(Math.random() * JARGON_POOL.length)];
+              return word[Math.floor(Math.random() * word.length)];
+            } else {
+              // Phase 4 — Random printable scatter before final reveal
+              const SCATTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*_-+<>';
+              return randFrom(SCATTER);
+            }
+          })
+          .join(''),
+      );
+
+      if (iterRef.current < totalIter) {
+        frameRef.current = setTimeout(step, 28);
+      } else {
+        // Final frame: show the real text
+        setDisplay(target);
+      }
+    };
+
+    step();
+    return () => {
+      if (frameRef.current) clearTimeout(frameRef.current);
+    };
+  }, [triggered, target]);
+
+  return display;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────
+   GEOMETRIC SEAL
+───────────────────────────────────────────────────────────────── */
 const GeoSeal: React.FC<{ seal: Seal }> = ({ seal }) => {
   if (!seal) return null;
 
   const configs: Record<NonNullable<Seal>, { points: string; stroke: string; fill: string; cls: string; label: string }> = {
     GOLD: {
-      // Hexagon
       points: '25,4 46,14.5 46,35.5 25,46 4,35.5 4,14.5',
       stroke: '#D4AF37', fill: 'rgba(212,175,55,0.12)',
       cls: 'seal-gold', label: 'GOLD',
     },
     SILVER: {
-      // Diamond
       points: '25,4 46,25 25,46 4,25',
       stroke: '#C0C0C0', fill: 'rgba(192,192,192,0.10)',
       cls: 'seal-silver', label: 'SLVR',
     },
     ELITE: {
-      // Octagon
       points: '16,4 34,4 46,16 46,34 34,46 16,46 4,34 4,16',
       stroke: '#a855f7', fill: 'rgba(168,85,247,0.12)',
       cls: 'seal-elite', label: 'ELITE',
     },
     COMPLETED: {
-      // Square
       points: '6,6 44,6 44,44 6,44',
       stroke: '#3a3a3a', fill: 'rgba(50,50,50,0.3)',
       cls: 'seal-done', label: 'DONE',
@@ -129,57 +226,64 @@ const GeoSeal: React.FC<{ seal: Seal }> = ({ seal }) => {
   };
 
   const { points, stroke, fill, cls, label } = configs[seal];
-  const glowColor = seal === 'GOLD' ? 'rgba(212,175,55,0.4)' : seal === 'SILVER' ? 'rgba(192,192,192,0.3)' : seal === 'ELITE' ? 'rgba(168,85,247,0.4)' : 'none';
+  const glowColor =
+    seal === 'GOLD' ? 'rgba(212,175,55,0.4)' :
+    seal === 'SILVER' ? 'rgba(192,192,192,0.3)' :
+    seal === 'ELITE' ? 'rgba(168,85,247,0.4)' : 'none';
 
   return (
     <div className={`geo-seal ${cls}`}>
       <svg viewBox="0 0 50 50" fill="none">
-        <polygon points={points} stroke={stroke} strokeWidth="1.5" fill={fill}
-          style={glowColor !== 'none' ? { filter: `drop-shadow(0 0 4px ${glowColor})` } : undefined} />
+        <polygon
+          points={points}
+          stroke={stroke}
+          strokeWidth="1.5"
+          fill={fill}
+          style={glowColor !== 'none' ? { filter: `drop-shadow(0 0 4px ${glowColor})` } : undefined}
+        />
       </svg>
       <span>{label}</span>
     </div>
   );
 };
 
-/* ── Custom Matrix Trophy Component ───────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   MATRIX TROPHY (unchanged)
+───────────────────────────────────────────────────────────────── */
 const TrophyPieces: React.FC<{ color: string; state: string }> = ({ color, state }) => {
   const pieceVariants = {
     idle: { x: 0, y: 0 },
-    glitch: { x: 0, y: 0 }, // Handled by container
+    glitch: { x: 0, y: 0 },
     hover: (i: number) => ({
       x: [0, i * 2.5, i * -1.5, i * 2],
       y: [0, i * -2, i * 1.5, i * -1],
-      transition: { duration: 0.15, repeat: Infinity, repeatType: "mirror" as const }
-    })
+      transition: { duration: 0.15, repeat: Infinity, repeatType: 'mirror' as const },
+    }),
   };
 
   return (
     <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <motion.path custom={-1} variants={pieceVariants} animate={state} d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-      <motion.path custom={1} variants={pieceVariants} animate={state} d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+      <motion.path custom={1}  variants={pieceVariants} animate={state} d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
       <motion.path custom={1.5} variants={pieceVariants} animate={state} d="M4 22h16" />
       <motion.path custom={-1.5} variants={pieceVariants} animate={state} d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-      <motion.path custom={1.5} variants={pieceVariants} animate={state} d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-      <motion.path custom={0} variants={pieceVariants} animate={state} d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+      <motion.path custom={1.5}  variants={pieceVariants} animate={state} d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+      <motion.path custom={0}    variants={pieceVariants} animate={state} d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
     </svg>
   );
 };
 
 const MatrixTrophy: React.FC = () => {
-  const [isHovered, setIsHovered] = React.useState(false);
-  const [glitching, setGlitching] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [glitching, setGlitching] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isHovered) return;
-    const fire = () => {
-      setGlitching(true);
-      setTimeout(() => setGlitching(false), 200);
-    };
     let timeoutId: ReturnType<typeof setTimeout>;
     const loop = () => {
       timeoutId = setTimeout(() => {
-        fire();
+        setGlitching(true);
+        setTimeout(() => setGlitching(false), 200);
         loop();
       }, 2000 + Math.random() * 2000);
     };
@@ -191,50 +295,20 @@ const MatrixTrophy: React.FC = () => {
 
   const baseVariants = {
     idle: { x: 0, y: 0, skewX: 0 },
-    glitch: {
-      x: [0, -2, 2, -1, 0],
-      y: [0, 1, -1, 1, 0],
-      skewX: [0, -5, 5, -2, 0],
-      transition: { duration: 0.2 }
-    },
-    hover: {
-      x: [0, -1, 1, -1, 1],
-      y: [0, 1, -1, 1, -1],
-      skewX: [0, -3, 3, -3, 3],
-      transition: { duration: 0.15, repeat: Infinity, repeatType: "mirror" as const }
-    }
+    glitch: { x: [0, -2, 2, -1, 0], y: [0, 1, -1, 1, 0], skewX: [0, -5, 5, -2, 0], transition: { duration: 0.2 } },
+    hover:  { x: [0, -1, 1, -1, 1], y: [0, 1, -1, 1, -1], skewX: [0, -3, 3, -3, 3], transition: { duration: 0.15, repeat: Infinity, repeatType: 'mirror' as const } },
   };
 
   const cyanVariants = {
-    idle: { x: 0, y: 0, opacity: 0 },
-    glitch: {
-      x: [0, -4, 0, -2, 0],
-      y: [0, -2, 0, -1, 0],
-      opacity: [0, 0.8, 0, 0.5, 0],
-      transition: { duration: 0.2 }
-    },
-    hover: {
-      x: [-2, -4, -1, -3],
-      y: [-1, -3, 0, -2],
-      opacity: [0.8, 0.4, 0.8, 0.6],
-      transition: { duration: 0.15, repeat: Infinity, repeatType: "mirror" as const }
-    }
+    idle:   { x: 0, y: 0, opacity: 0 },
+    glitch: { x: [0, -4, 0, -2, 0], y: [0, -2, 0, -1, 0], opacity: [0, 0.8, 0, 0.5, 0], transition: { duration: 0.2 } },
+    hover:  { x: [-2, -4, -1, -3], y: [-1, -3, 0, -2], opacity: [0.8, 0.4, 0.8, 0.6], transition: { duration: 0.15, repeat: Infinity, repeatType: 'mirror' as const } },
   };
 
   const redVariants = {
-    idle: { x: 0, y: 0, opacity: 0 },
-    glitch: {
-      x: [0, 4, 0, 2, 0],
-      y: [0, 2, 0, 1, 0],
-      opacity: [0, 0.8, 0, 0.5, 0],
-      transition: { duration: 0.2 }
-    },
-    hover: {
-      x: [2, 4, 1, 3],
-      y: [1, 3, 0, 2],
-      opacity: [0.8, 0.4, 0.8, 0.6],
-      transition: { duration: 0.15, repeat: Infinity, repeatType: "mirror" as const }
-    }
+    idle:   { x: 0, y: 0, opacity: 0 },
+    glitch: { x: [0, 4, 0, 2, 0], y: [0, 2, 0, 1, 0], opacity: [0, 0.8, 0, 0.5, 0], transition: { duration: 0.2 } },
+    hover:  { x: [2, 4, 1, 3], y: [1, 3, 0, 2], opacity: [0.8, 0.4, 0.8, 0.6], transition: { duration: 0.15, repeat: Infinity, repeatType: 'mirror' as const } },
   };
 
   const pixels = [
@@ -250,19 +324,7 @@ const MatrixTrophy: React.FC = () => {
     <motion.div
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      onPointerDown={() => setIsHovered(true)}
-      onPointerUp={() => setIsHovered(false)}
-      onPointerCancel={() => setIsHovered(false)}
-      style={{
-        position: 'absolute',
-        right: 0,
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: '72px',
-        height: '72px',
-        cursor: 'pointer',
-        zIndex: 10
-      }}
+      style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', width: 72, height: 72, cursor: 'pointer', zIndex: 10 }}
     >
       <motion.div
         style={{ position: 'relative', width: '100%', height: '100%' }}
@@ -270,55 +332,24 @@ const MatrixTrophy: React.FC = () => {
         transition={{ duration: 0.2 }}
       >
         <motion.div variants={baseVariants} animate={state} style={{ position: 'absolute', inset: 0 }}>
-          {/* Cyan Glitch Layer */}
           <motion.div variants={cyanVariants} animate={state} style={{ position: 'absolute', inset: 0, mixBlendMode: 'screen' }}>
             <TrophyPieces color="#00FFFF" state={state} />
           </motion.div>
-          
-          {/* Red Glitch Layer */}
           <motion.div variants={redVariants} animate={state} style={{ position: 'absolute', inset: 0, mixBlendMode: 'screen' }}>
             <TrophyPieces color="#FF003C" state={state} />
           </motion.div>
-          
-          {/* Base Gold Layer */}
           <div style={{ position: 'absolute', inset: 0 }}>
             <TrophyPieces color="#D4AF37" state={state} />
           </div>
         </motion.div>
-
-        {/* Floating Pixels */}
         {pixels.map(p => (
           <motion.div
             key={p.id}
-            style={{
-              position: 'absolute',
-              top: p.top,
-              left: p.left,
-              width: p.size,
-              height: p.size,
-              backgroundColor: '#D4AF37',
-              borderRadius: '1px'
-            }}
+            style={{ position: 'absolute', top: p.top, left: p.left, width: p.size, height: p.size, backgroundColor: '#D4AF37', borderRadius: 1 }}
             variants={{
-              idle: { 
-                y: [0, -8, 0], 
-                x: [0, 4, 0],
-                opacity: 0.5,
-                transition: { duration: 3 + p.id * 0.5, repeat: Infinity, ease: 'easeInOut' } 
-              },
-              glitch: {
-                x: [0, p.id * 3, -p.id * 2, 0],
-                y: [0, -p.id * 2, p.id * 3, 0],
-                opacity: [0.5, 1, 0.5],
-                transition: { duration: 0.2 }
-              },
-              hover: {
-                x: [0, p.id * 8 * (p.id % 2 === 0 ? 1 : -1), p.id * 12 * (p.id % 2 === 0 ? -1 : 1)],
-                y: [0, p.id * -6, p.id * 8],
-                opacity: [1, 0.3, 1],
-                scale: [1, 1.5, 1],
-                transition: { duration: 0.15 + p.id * 0.05, repeat: Infinity, repeatType: "mirror" as const }
-              }
+              idle:   { y: [0, -8, 0], x: [0, 4, 0], opacity: 0.5, transition: { duration: 3 + p.id * 0.5, repeat: Infinity, ease: 'easeInOut' } },
+              glitch: { x: [0, p.id * 3, -p.id * 2, 0], y: [0, -p.id * 2, p.id * 3, 0], opacity: [0.5, 1, 0.5], transition: { duration: 0.2 } },
+              hover:  { x: [0, p.id * 8 * (p.id % 2 === 0 ? 1 : -1), p.id * 12 * (p.id % 2 === 0 ? -1 : 1)], y: [0, p.id * -6, p.id * 8], opacity: [1, 0.3, 1], scale: [1, 1.5, 1], transition: { duration: 0.15 + p.id * 0.05, repeat: Infinity, repeatType: 'mirror' as const } },
             }}
             animate={state}
           />
@@ -328,81 +359,101 @@ const MatrixTrophy: React.FC = () => {
   );
 };
 
-const HoloCard: React.FC<{
-  title: string;
-  detail: string;
-  Icon: React.ElementType;
-}> = ({ title, detail, Icon }) => {
-  const ref = React.useRef<HTMLDivElement>(null);
+/* ─────────────────────────────────────────────────────────────────
+   3D TILT CARD — reusable wrapper
+───────────────────────────────────────────────────────────────── */
+const TiltCard: React.FC<{ children: React.ReactNode; className?: string; style?: React.CSSProperties }> = ({ children, className = '', style }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const xSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const ySpring = useSpring(y, { stiffness: 300, damping: 30 });
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], ['8deg', '-8deg']);
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], ['-8deg', '8deg']);
 
-  // Smooth out the mouse values
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
-
-  // Map mouse position to rotation (-10 to 10 degrees)
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  // Dynamic glare based on mouse position
-  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["100%", "0%"]);
-  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["100%", "0%"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    // Normalize coordinates (-0.5 to 0.5)
-    const xPct = (mouseX / width) - 0.5;
-    const yPct = (mouseY / height) - 0.5;
-    
-    x.set(xPct);
-    y.set(yPct);
-  };
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
 
-  const handleMouseLeave = () => {
+    // Chromatic aberration via CSS custom properties
+    const xPct = (e.clientX - rect.left) / rect.width;
+    ref.current.style.setProperty('--mouse-x', `${xPct}`);
+    ref.current.style.setProperty('--spot-x', `${e.clientX - rect.left}px`);
+    ref.current.style.setProperty('--spot-y', `${e.clientY - rect.top}px`);
+  }, [x, y]);
+
+  const handleLeave = useCallback(() => {
     x.set(0);
     y.set(0);
+    if (ref.current) {
+      ref.current.style.setProperty('--spot-x', '-999px');
+      ref.current.style.setProperty('--spot-y', '-999px');
+    }
+  }, [x, y]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={{ ...style, rotateX, rotateY, transformStyle: 'preserve-3d', willChange: 'transform', transform: 'translateZ(0)' }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   HOLO CARD (Apex Achievements)
+───────────────────────────────────────────────────────────────── */
+const HoloCard: React.FC<{ title: string; detail: string; Icon: React.ElementType; triggered: boolean }> = ({ title, detail, Icon, triggered }) => {
+  const revealed = useCryptoReveal(title, triggered);
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const xSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const ySpring = useSpring(y, { stiffness: 300, damping: 30 });
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], ['10deg', '-10deg']);
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], ['-10deg', '10deg']);
+  const glareX  = useTransform(xSpring, [-0.5, 0.5], ['100%', '0%']);
+  const glareY  = useTransform(ySpring, [-0.5, 0.5], ['100%', '0%']);
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
   return (
     <div className="holo-wrapper" style={{ perspective: 1000 }}>
       <motion.div
         ref={ref}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMove}
+        onMouseLeave={() => { x.set(0); y.set(0); }}
         className="holo-card"
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-        }}
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
       >
-        {/* Animated Border Beam */}
         <div className="holo-border-beam" />
-        
-        {/* Content Container (lifted off card base) */}
-        <div className="holo-content" style={{ transform: "translateZ(30px)" }}>
+        <div className="holo-content" style={{ transform: 'translateZ(30px)' }}>
           <div className="holo-icon-wrap">
             <Icon size={24} color="#D4AF37" strokeWidth={1.5} />
           </div>
           <div className="holo-text-group">
-            <p className="holo-title">{title}</p>
+            <p className="holo-title crypto-text" style={{ mixBlendMode: triggered ? 'normal' : 'screen' }}>
+              {revealed}
+            </p>
             <p className="holo-detail">{detail}</p>
           </div>
         </div>
-
-        {/* Dynamic Glare Layer */}
         <motion.div
           className="holo-glare"
           style={{
             background: useTransform(
-              () => `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, 0.15) 0%, transparent 60%)`
+              () => `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255,255,255,0.15) 0%, transparent 60%)`
             ),
           }}
         />
@@ -411,66 +462,231 @@ const HoloCard: React.FC<{
   );
 };
 
-/* ── Main Component ─────────────────────────────────────────────── */
-const Trophies: React.FC = () => {
-  return (
-    <div className="trophies-page px-4 md:px-0 w-full overflow-x-hidden">
+/* ─────────────────────────────────────────────────────────────────
+   TIMELINE NODE
+   A section that sits on the vertical spine. Animates in when
+   the scroll trace reaches it.
+───────────────────────────────────────────────────────────────── */
+interface TimelineNodeProps {
+  label: string;
+  index: number;
+  children: React.ReactNode;
+  onTriggered?: () => void;
+}
 
-      {/* ── Hero ────────────────────────────────────────────────── */}
+const TimelineNode: React.FC<TimelineNodeProps> = ({ label, index, children, onTriggered }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-15% 0px' });
+
+  useEffect(() => {
+    if (isInView && onTriggered) onTriggered();
+  }, [isInView, onTriggered]);
+
+  return (
+    <div ref={ref} className="timeline-node">
+      {/* Spine dot */}
+      <motion.div
+        className="timeline-dot"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <motion.div
+          className="timeline-dot-pulse"
+          animate={isInView ? { scale: [1, 1.8, 1], opacity: [0.8, 0, 0] } : {}}
+          transition={{ duration: 1.6, repeat: Infinity, delay: 0.4 }}
+        />
+      </motion.div>
+
+      {/* Section label */}
+      <motion.div
+        className="timeline-node-header"
+        initial={{ opacity: 0, x: -20 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.15 + index * 0.05 }}
+      >
+        <span className="timeline-label mono-text">{label}</span>
+        <span className="timeline-index mono-text">[ {String(index + 1).padStart(2, '0')} ]</span>
+      </motion.div>
+
+      {/* Content */}
+      <motion.div
+        className="timeline-content"
+        initial={{ opacity: 0, y: 24 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.25 + index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   CERT CARD with crypto reveal
+───────────────────────────────────────────────────────────────── */
+const CertCard: React.FC<{ cert: CertData; triggered: boolean }> = ({ cert, triggered }) => {
+  const revealed = useCryptoReveal(cert.title, triggered);
+  return (
+    <TiltCard className="cert-card premium-card" style={{ perspective: 800 }}>
+      <GeoSeal seal={cert.seal} />
+      <div className="cert-issuer-badge">{cert.issuer}</div>
+      <p className="cert-title crypto-text" style={{ mixBlendMode: triggered ? 'normal' : 'screen' }}>
+        {revealed}
+      </p>
+      {cert.detail && <p className="cert-detail">{cert.detail}</p>}
+    </TiltCard>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   COMBAT ENTRY with crypto reveal
+───────────────────────────────────────────────────────────────── */
+const CombatEntry: React.FC<{ entry: AwardEntry; triggered: boolean; delay: number }> = ({ entry, triggered, delay }) => {
+  const revealed = useCryptoReveal(entry.title, triggered);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-5% 0px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="combat-entry"
+      initial={{ opacity: 0, x: -16 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.45, delay }}
+    >
+      <div className="combat-connector" />
+      <TiltCard className="combat-block premium-card" style={{ perspective: 600 }}>
+        <p className="combat-title">
+          <span className="crypto-text" style={{ mixBlendMode: triggered ? 'normal' : 'screen' }}>
+            {revealed}
+          </span>
+          {entry.prize && <span className="combat-prize">{entry.prize}</span>}
+        </p>
+      </TiltCard>
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   SCROLL TRACE — the animated gold line moving down the spine
+───────────────────────────────────────────────────────────────── */
+const ScrollTrace: React.FC<{ containerRef: React.RefObject<HTMLElement | null> }> = ({ containerRef }) => {
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end end'] });
+  const height = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const smoothHeight = useSpring(height, { stiffness: 60, damping: 25 });
+
+  return (
+    <div className="timeline-spine-wrap">
+      <div className="timeline-spine" />
+      <motion.div
+        className="timeline-trace"
+        style={{ height: smoothHeight }}
+      />
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────────────────────────── */
+const Trophies: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [apexTriggered, setApexTriggered]   = useState(false);
+  const [certTriggered, setCertTriggered]   = useState(false);
+  const [combatTriggered, setCombatTriggered] = useState(false);
+
+  return (
+    <div className="trophies-page px-4 md:px-0 w-full overflow-x-hidden" ref={containerRef}>
+
+      {/* ── Hero ──────────────────────────────────────────────── */}
       <div className="trophies-hero">
         <div className="trophies-hero-text">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">&gt;&gt; HALL_OF_RECORDS</h1>
-          <p>
+          <motion.h1
+            className="trophies-headline mono-text"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            &gt;&gt; HALL_OF_RECORDS
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+          >
             Compiled telemetry of validated credentials, continuous learning matrices,
             and competitive podiums.
-          </p>
+          </motion.p>
         </div>
-
         <MatrixTrophy />
       </div>
 
-      {/* ── Apex Achievements ────────────────────────────────────── */}
-      <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// APEX_ACHIEVEMENTS</p>
-      <div className="apex-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {apexAchievements.map(({ id, title, detail, Icon }) => (
-          <HoloCard key={id} title={title} detail={detail} Icon={Icon} />
-        ))}
-      </div>
+      {/* ── Vertical Timeline ─────────────────────────────────── */}
+      <div className="timeline-container">
+        <ScrollTrace containerRef={containerRef} />
 
-      {/* ── Certifications ───────────────────────────────────────── */}
-      <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// VALIDATED_CREDENTIALS</p>
-      <div className="cert-grid">
-        {certifications.map((cert) => (
-          <div key={cert.id} className="cert-card premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
-            <GeoSeal seal={cert.seal} />
-            <div className="cert-issuer-badge">{cert.issuer}</div>
-            <p className="cert-title">{cert.title}</p>
-            {cert.detail && <p className="cert-detail">{cert.detail}</p>}
-          </div>
-        ))}
-      </div>
+        <div className="timeline-nodes">
 
-      {/* ── Combat Log ───────────────────────────────────────────── */}
-      <p className="section-header text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text mt-16">// COMPETITIVE_PODIUMS</p>
-      <div className="combat-log w-full flex flex-col gap-4">
-        {combatLog.map((group) => (
-          <div key={group.year} className="combat-year-group">
-            <div className="combat-year-header">[ {group.year} ]</div>
-            {group.entries.map((entry, i) => (
-              <div key={i} className="combat-entry">
-                <div className="combat-connector" />
-                <div className="combat-block premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
-                  <p className="combat-title">
-                    {entry.title}
-                    {entry.prize && <span className="combat-prize">{entry.prize}</span>}
-                  </p>
+          {/* Node 01 — Apex Achievements */}
+          <TimelineNode
+            label="// APEX_ACHIEVEMENTS"
+            index={0}
+            onTriggered={useCallback(() => setApexTriggered(true), [])}
+          >
+            <div className="apex-grid">
+              {apexAchievements.map(({ id, title, detail, Icon }) => (
+                <HoloCard key={id} title={title} detail={detail} Icon={Icon} triggered={apexTriggered} />
+              ))}
+            </div>
+          </TimelineNode>
+
+          {/* Node 02 — Certifications */}
+          <TimelineNode
+            label="// VALIDATED_CREDENTIALS"
+            index={1}
+            onTriggered={useCallback(() => setCertTriggered(true), [])}
+          >
+            <div className="cert-grid">
+              {certifications.map(cert => (
+                <CertCard key={cert.id} cert={cert} triggered={certTriggered} />
+              ))}
+            </div>
+          </TimelineNode>
+
+          {/* Node 03 — Competitive Podiums */}
+          <TimelineNode
+            label="// COMPETITIVE_PODIUMS"
+            index={2}
+            onTriggered={useCallback(() => setCombatTriggered(true), [])}
+          >
+            <div className="combat-log">
+              {combatLog.map((group) => (
+                <div key={group.year} className="combat-year-group">
+                  <motion.div
+                    className="combat-year-header"
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    [ {group.year} ]
+                  </motion.div>
+                  {group.entries.map((entry, i) => (
+                    <CombatEntry
+                      key={i}
+                      entry={entry}
+                      triggered={combatTriggered}
+                      delay={i * 0.06}
+                    />
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+              ))}
+            </div>
+          </TimelineNode>
 
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,157 @@
+/* ════════════════════════════════════════
+   SYSTEM LOG FOOTER — fixed terminal bar
+════════════════════════════════════════ */
+
+.syslog-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(6, 6, 6, 0.96);
+  border-top: 1px solid #1a1a1a;
+  padding: 0 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.68rem;
+  color: #444;
+  /* GPU layer */
+  transform: translateZ(0);
+  will-change: transform;
+  backdrop-filter: blur(10px);
+}
+
+/* Badge */
+.syslog-badge {
+  flex-shrink: 0;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 3px;
+  padding: 1px 7px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: #D4AF37;
+  line-height: 1.4;
+}
+
+/* Scroll area */
+.syslog-scroll {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Fade edges */
+.syslog-scroll::before,
+.syslog-scroll::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.syslog-scroll::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(6,6,6,0.96), transparent);
+}
+
+.syslog-scroll::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(6,6,6,0.96), transparent);
+}
+
+.syslog-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  /* Smooth marquee-style scroll */
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 4px;
+}
+
+.syslog-inner::-webkit-scrollbar { display: none; }
+
+/* Log entry */
+.syslog-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+  transition: color 0.3s;
+}
+
+.syslog-entry--latest .syslog-msg {
+  color: #888;
+}
+
+.syslog-ts {
+  color: #2e2e2e;
+  font-size: 0.6rem;
+}
+
+.syslog-msg {
+  color: #444;
+}
+
+.syslog-sep {
+  color: #222;
+  margin: 0 4px;
+}
+
+/* Blinking cursor after latest */
+.syslog-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 11px;
+  background: #D4AF37;
+  opacity: 0.7;
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: syslogBlink 1s step-end infinite;
+}
+
+@keyframes syslogBlink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0; }
+}
+
+/* Status indicator */
+.syslog-status {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.syslog-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #28C840;
+  box-shadow: 0 0 6px rgba(40, 200, 64, 0.8);
+  animation: syslogDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes syslogDotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(40,200,64,0.8); }
+  50%       { opacity: 0.4; box-shadow: 0 0 2px rgba(40,200,64,0.3); }
+}
+
+.syslog-online {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: #28C840;
+}
+
+/* Ensure content isn't hidden by footer */
+body {
+  padding-bottom: 28px;
+}

@@ -1,49 +1,107 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code, ExternalLink, Terminal, Cpu, Database, Cloud, Briefcase, FileCode, BookOpen, FileText } from 'lucide-react';
-import heroImage from '../../Image/hero.png';
+import heroImage from '../../Image/GIT.png';
 import CorePhilosophy from '../components/CorePhilosophy';
 import LiveTelemetry from '../components/LiveTelemetry';
 import WorkExperience from '../components/WorkExperience';
+import KineticRibbon from '../components/KineticRibbon';
 import './Home.css';
 
-// Spotlight helper — call on any card div to track cursor
+/* ─────────────────────────────────────────────────────────────────
+   SPOTLIGHT HANDLERS (chromatic aberration)
+───────────────────────────────────────────────────────────────── */
 const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
   el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
   el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+  el.style.setProperty('--mouse-x', `${(e.clientX - r.left) / r.width}`);
 };
 const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
   e.currentTarget.style.setProperty('--spot-x', '-999px');
   e.currentTarget.style.setProperty('--spot-y', '-999px');
 };
 
+/* ─────────────────────────────────────────────────────────────────
+   GHOST HINT — triggers the command terminal via custom event
+───────────────────────────────────────────────────────────────── */
+const GhostHint: React.FC = () => {
+  const fireTerminal = () => {
+    window.dispatchEvent(new CustomEvent('terminal:open'));
+  };
 
-const LiquidGauge = ({ fillValue, displayLabel, label, subLabel }: { fillValue: number, displayLabel: string, label: string, subLabel: string }) => {
   return (
-    <div className="liquid-gauge-item min-w-0">
-      {/* ring wrapper provides the double gold halo */}
-      <div className="liquid-orb-ring">
-        <div className="liquid-orb">
-          <div className="liquid-fill" style={{ top: `${100 - fillValue}%` }}>
-            <div className="liquid-wave" />
-            <div className="liquid-wave-back" />
-          </div>
-          {/* glare highlight */}
-          <div className="liquid-glare" />
-          {/* percentage label */}
-          <div className="liquid-label-pct">{displayLabel}</div>
-        </div>
-      </div>
-      <div className="liquid-gauge-info">
-        <span className="liquid-gauge-name">{label}</span>
-        <span className="liquid-gauge-sub">{subLabel}</span>
-      </div>
-    </div>
+    <button
+      className="ghost-hint mono-text"
+      onClick={fireTerminal}
+      title="Open Command Terminal"
+      aria-label="Open command terminal"
+    >
+      <span className="ghost-hint-key">[ Ctrl ]</span>
+      <span className="ghost-hint-sep">+</span>
+      <span className="ghost-hint-key">[ K ]</span>
+      <span className="ghost-hint-label">TO OVERRIDE SYSTEM</span>
+    </button>
   );
 };
 
+/* ─────────────────────────────────────────────────────────────────
+   LIQUID GAUGE
+───────────────────────────────────────────────────────────────── */
+const LiquidGauge = ({
+  fillValue,
+  displayLabel,
+  label,
+  subLabel,
+}: {
+  fillValue: number;
+  displayLabel: string;
+  label: string;
+  subLabel: string;
+}) => (
+  <div className="liquid-gauge-item min-w-0">
+    <div className="liquid-orb-ring">
+      <div className="liquid-orb">
+        <div className="liquid-fill" style={{ top: `${100 - fillValue}%` }}>
+          <div className="liquid-wave" />
+          <div className="liquid-wave-back" />
+        </div>
+        <div className="liquid-glare" />
+        <div className="liquid-label-pct">{displayLabel}</div>
+      </div>
+    </div>
+    <div className="liquid-gauge-info">
+      <span className="liquid-gauge-name">{label}</span>
+      <span className="liquid-gauge-sub">{subLabel}</span>
+    </div>
+  </div>
+);
+
+/* ─────────────────────────────────────────────────────────────────
+   MAGNETIC SKILL TAG — draggable with spring snap-back
+───────────────────────────────────────────────────────────────── */
+const MagneticSkillTag: React.FC<{ item: string; idx: number }> = ({ item, idx }) => (
+  <motion.div
+    className="skill-node"
+    drag
+    dragSnapToOrigin
+    dragElastic={0.18}
+    dragTransition={{ bounceStiffness: 320, bounceDamping: 22 }}
+    whileDrag={{ scale: 1.12, zIndex: 50, cursor: 'grabbing' }}
+    whileHover={{ scale: 1.06 }}
+    style={{ cursor: 'grab', touchAction: 'none', position: 'relative', zIndex: idx }}
+    title={`Drag me!`}
+  >
+    <span className="node-bracket">[</span>
+    <span className="skill-name">{item}</span>
+    <span className="node-bracket">]</span>
+  </motion.div>
+);
+
+/* ─────────────────────────────────────────────────────────────────
+   HOME PAGE
+───────────────────────────────────────────────────────────────── */
 const Home: React.FC = () => {
   const [activeTab, setActiveTab] = useState('languages');
 
@@ -51,43 +109,48 @@ const Home: React.FC = () => {
     languages: {
       icon: <Terminal size={18} />,
       title: 'Languages',
-      items: ['Java', 'Python', 'JavaScript', 'TypeScript', 'SQL']
+      items: ['Java', 'Python', 'JavaScript', 'TypeScript', 'SQL'],
     },
     frontend: {
       icon: <ExternalLink size={18} />,
       title: 'Frontend',
-      items: ['React.js', 'HTML5', 'CSS3', 'Material UI']
+      items: ['React.js', 'HTML5', 'CSS3', 'Material UI'],
     },
     backend: {
       icon: <Cpu size={18} />,
       title: 'Backend',
-      items: ['Node.js', 'Express.js', 'REST APIs', 'WebSockets (Socket.io)']
+      items: ['Node.js', 'Express.js', 'REST APIs', 'WebSockets (Socket.io)'],
     },
     databases: {
       icon: <Database size={18} />,
       title: 'Databases',
-      items: ['MongoDB', 'MySQL', 'SQLite']
+      items: ['MongoDB', 'MySQL', 'SQLite'],
     },
     cloud: {
       icon: <Cloud size={18} />,
       title: 'Cloud & Tools',
-      items: ['Google Cloud Platform (GCP)', 'Firebase', 'Git', 'GitHub', 'Vercel', 'LiveKit']
-    }
+      items: ['Google Cloud Platform (GCP)', 'Firebase', 'Git', 'GitHub', 'Vercel', 'LiveKit'],
+    },
   };
 
   return (
     <div className="home-container px-4 md:px-8 overflow-x-hidden w-full">
-      {/* 1. LANDING HERO & AVATAR COMPONENT */}
+
+      {/* ── 1. HERO ─────────────────────────────────────────── */}
       <section className="hero-section">
         <div className="hero-content">
           <div className="status-badge mono-text">
-            <span className="pulse-dot"></span> SYSTEM ONLINE
+            <span className="pulse-dot" /> SYSTEM ONLINE
           </div>
+
+          {/* ② GHOST HINT — immediately below the badge */}
+          <GhostHint />
+
           <h1 className="hero-title text-3xl md:text-5xl">
             SRIHARI <span className="gold-text">P V</span>
           </h1>
           <p className="hero-subtitle">
-            <span className="mono-text">//</span> Full-Stack & Backend Systems Developer
+            <span className="mono-text">//</span> Full-Stack &amp; Backend Systems Developer
           </p>
 
           <motion.div
@@ -97,31 +160,28 @@ const Home: React.FC = () => {
             transition={{ delay: 0.5, duration: 1 }}
           >
             <span className="mono-text typing-text">
-              "Hey, I'm Srihari. A final-year CS student who loves turning caffeine into low-latency backend architectures and pixel-perfect user interfaces. Always building, always learning."
+              "Hey, I'm Srihari. A final-year CS student who loves turning caffeine into
+              low-latency backend architectures and pixel-perfect user interfaces.
+              Always building, always learning."
             </span>
             <span className="cursor-blink">|</span>
           </motion.div>
 
           <div className="hero-actions flex flex-wrap gap-3">
             <a href="https://github.com/LORDMOSTER" target="_blank" rel="noopener noreferrer" className="pill-btn">
-              <Code size={16} />
-              <span className="mono-text">GitHub</span>
+              <Code size={16} /><span className="mono-text">GitHub</span>
             </a>
             <a href="https://www.linkedin.com/in/srihari-p-v-bb8560341/" target="_blank" rel="noopener noreferrer" className="pill-btn">
-              <Briefcase size={16} />
-              <span className="mono-text">LinkedIn</span>
+              <Briefcase size={16} /><span className="mono-text">LinkedIn</span>
             </a>
             <a href="https://leetcode.com/u/SRIHARIPV/" target="_blank" rel="noopener noreferrer" className="pill-btn">
-              <FileCode size={16} />
-              <span className="mono-text">LeetCode</span>
+              <FileCode size={16} /><span className="mono-text">LeetCode</span>
             </a>
             <a href="https://dev.to/srihari_pv_36ab3b53fa27e" target="_blank" rel="noopener noreferrer" className="pill-btn">
-              <BookOpen size={16} />
-              <span className="mono-text">Dev.to</span>
+              <BookOpen size={16} /><span className="mono-text">Dev.to</span>
             </a>
             <a href="https://drive.google.com/file/d/1yX403sYRQMWXH0QZ89Ku_3R2HKL0mosW/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="pill-btn">
-              <FileText size={16} />
-              <span className="mono-text">Resume</span>
+              <FileText size={16} /><span className="mono-text">Resume</span>
             </a>
           </div>
         </div>
@@ -135,24 +195,9 @@ const Home: React.FC = () => {
                   <stop offset="100%" stopColor="var(--accent-gold-dark)" />
                 </linearGradient>
               </defs>
-              <circle
-                className="track-base"
-                cx="100" cy="100" r="96"
-                fill="none" stroke="var(--border-color)" strokeWidth="2"
-              />
-              <circle
-                className="track-moving"
-                cx="100" cy="100" r="96"
-                fill="none" stroke="url(#goldGradient)" strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray="150 450"
-              />
-              <circle
-                className="track-moving-secondary"
-                cx="100" cy="100" r="88"
-                fill="none" stroke="var(--accent-gold)" strokeWidth="1"
-                strokeDasharray="50 300"
-              />
+              <circle className="track-base" cx="100" cy="100" r="96" fill="none" stroke="var(--border-color)" strokeWidth="2" />
+              <circle className="track-moving" cx="100" cy="100" r="96" fill="none" stroke="url(#goldGradient)" strokeWidth="4" strokeLinecap="round" strokeDasharray="150 450" />
+              <circle className="track-moving-secondary" cx="100" cy="100" r="88" fill="none" stroke="var(--accent-gold)" strokeWidth="1" strokeDasharray="50 300" />
             </svg>
             <div className="avatar-image">
               <img src={heroImage} alt="Srihari P V" />
@@ -161,32 +206,41 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. THE IDENTITY LAYER & CORE SKILLS */}
+      {/* ── KINETIC RIBBON DIVIDER ────────────────────────── */}
+      <div className="kinetic-ribbon-section">
+        <KineticRibbon />
+      </div>
+
+      {/* ── 3. IDENTITY & SKILLS ────────────────────────────── */}
       <section className="identity-section">
         <div className="section-header">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">// ENGINEER_PROFILE</h2>
-          <div className="header-line"></div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">
+            // ENGINEER_PROFILE
+          </h2>
+          <div className="header-line" />
         </div>
 
         <div className="telemetry-dashboard">
-          <div className="card identity-card premium-card"
-            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+          <div
+            className="card identity-card premium-card"
+            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); el.style.setProperty('--mouse-x', `${(e.clientX - r.left) / r.width}`); }}
             onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
           >
             <h3 className="card-title mono-text">What I Build</h3>
             <p className="identity-text">
-              Targeting high-scale, real-time architectures. Focused on reducing query latency and optimizing multi-user processing pipelines.
+              Targeting high-scale, real-time architectures. Focused on reducing query
+              latency and optimizing multi-user processing pipelines.
             </p>
           </div>
 
-          <div className="card baseline-card premium-card"
+          <div
+            className="card baseline-card premium-card"
             style={{ backgroundColor: 'rgba(18, 18, 18, 0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}
-            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }}
+            onMouseMove={e => { const el = e.currentTarget; const r = el.getBoundingClientRect(); el.style.setProperty('--spot-x', `${e.clientX - r.left}px`); el.style.setProperty('--spot-y', `${e.clientY - r.top}px`); el.style.setProperty('--mouse-x', `${(e.clientX - r.left) / r.width}`); }}
             onMouseLeave={e => { e.currentTarget.style.setProperty('--spot-x', '-999px'); e.currentTarget.style.setProperty('--spot-y', '-999px'); }}
           >
             <h3 className="card-title mono-text mb-6">Education</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Row 1 */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
                   <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Degree</span>
@@ -197,14 +251,10 @@ const Home: React.FC = () => {
                   <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>2023 - 2027</span>
                 </div>
               </div>
-
-              {/* Row 2 */}
               <div>
                 <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Institution</span>
                 <span style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>Nandha College of Technology</span>
               </div>
-
-              {/* Row 3 */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
                   <span className="mono-text" style={{ display: 'block', fontSize: '0.75rem', color: '#A0A0A0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>CGPA</span>
@@ -219,8 +269,11 @@ const Home: React.FC = () => {
           </div>
         </div>
 
+        {/* ── TECH ARSENAL ─────────────────────────────────── */}
         <div className="arsenal-module">
-          <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">&gt;&gt; TECH_ARSENAL</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">
+            &gt;&gt; TECH_ARSENAL
+          </h3>
           <div className="arsenal-container card premium-card">
             <div className="arsenal-tabs flex overflow-x-auto whitespace-nowrap scrollbar-hide w-full">
               {Object.entries(arsenalData).map(([key, data]) => (
@@ -236,6 +289,10 @@ const Home: React.FC = () => {
             </div>
 
             <div className="arsenal-content">
+              {/*
+                AnimatePresence key change triggers enter/exit animation.
+                Each skill tag is now draggable with spring snap-back.
+              */}
               <motion.div
                 key={activeTab}
                 initial={{ opacity: 0, y: 10 }}
@@ -244,36 +301,23 @@ const Home: React.FC = () => {
                 className="skills-grid flex flex-wrap gap-3 justify-start"
               >
                 {arsenalData[activeTab as keyof typeof arsenalData].items.map((item, idx) => (
-                  <div key={idx} className="skill-node">
-                    <span className="node-bracket">[</span>
-                    <span className="skill-name">{item}</span>
-                    <span className="node-bracket">]</span>
-                  </div>
+                  <MagneticSkillTag key={`${activeTab}-${idx}`} item={item} idx={idx} />
                 ))}
               </motion.div>
             </div>
           </div>
         </div>
 
+        {/* ── LANGUAGES ────────────────────────────────────── */}
         <div className="languages-section">
           <h2 className="languages-header">&gt;&gt; LANGUAGES</h2>
           <div className="liquid-gauges-row w-full flex flex-wrap">
-            <LiquidGauge
-              fillValue={55}
-              displayLabel="75%"
-              label="English"
-              subLabel="Professional Working Proficiency"
-            />
-            <LiquidGauge
-              fillValue={70}
-              displayLabel="90%"
-              label="Tamil (Native)"
-              subLabel="Full Duplex — Verbal & Written"
-            />
+            <LiquidGauge fillValue={55} displayLabel="75%" label="English" subLabel="Professional Working Proficiency" />
+            <LiquidGauge fillValue={70} displayLabel="90%" label="Tamil (Native)" subLabel="Full Duplex — Verbal & Written" />
           </div>
         </div>
 
-        {/* >> SOFT SKILLS */}
+        {/* ── SOFT SKILLS ──────────────────────────────────── */}
         <div className="soft-skills-section">
           <h2 className="soft-skills-header">&gt;&gt; SOFT SKILLS</h2>
           <div className="soft-skills-grid grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
@@ -292,15 +336,8 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-
-
-        {/* Inject Work Experience under Tech Arsenal */}
         <WorkExperience />
-
-        {/* Inject Live Telemetry */}
         <LiveTelemetry />
-
-        {/* Inject Core Philosophy */}
         <CorePhilosophy />
       </section>
     </div>
