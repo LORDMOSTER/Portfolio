@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code, ExternalLink, Terminal, Cpu, Database, Cloud, Briefcase, FileCode, BookOpen, FileText } from 'lucide-react';
-import heroImage from '../../Image/hero.jpg';
+import heroImage from '../../Image/hero.png';
 import CorePhilosophy from '../components/CorePhilosophy';
 import LiveTelemetry from '../components/LiveTelemetry';
 import WorkExperience from '../components/WorkExperience';
