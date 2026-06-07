@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView, useSpring, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useSystemLog } from '../contexts/SystemLogContext';
 import './LiveTelemetry.css';
 

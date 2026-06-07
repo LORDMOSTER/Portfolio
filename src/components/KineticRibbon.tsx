@@ -1,4 +1,3 @@
-import React from 'react';
 import './KineticRibbon.css';
 
 export const KineticRibbon = () => {
