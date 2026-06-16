@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Code, ExternalLink, Terminal, Cpu, Database, Cloud, Briefcase, FileCode, BookOpen, FileText } from 'lucide-react';
 import heroImage from '../../Image/GIT.png';
