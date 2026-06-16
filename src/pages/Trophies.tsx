@@ -7,13 +7,14 @@ import {
   useScroll,
   useInView,
 } from 'framer-motion';
-import { Crown, Medal } from 'lucide-react';
 import './Trophies.css';
+
+const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
 /* ─────────────────────────────────────────────────────────────────
    TYPES
 ───────────────────────────────────────────────────────────────── */
-type Seal = 'GOLD' | 'SILVER' | 'ELITE' | 'COMPLETED' | null;
+type Seal = 'GOLD' | 'SILVER' | 'ELITE' | 'COMPLETED' | 'VERIFIED' | null;
 
 interface CertData {
   id: number;
@@ -37,7 +38,6 @@ interface ApexAchievement {
   id: number;
   title: string;
   detail: string;
-  Icon: React.ElementType;
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -48,13 +48,11 @@ const apexAchievements: ApexAchievement[] = [
     id: 1,
     title: '[ BEST PERFORMER OF THE YEAR : 2025-26 ]',
     detail: 'Awarded by the College Administration for outstanding overarching academic and technical excellence.',
-    Icon: Crown,
   },
   {
     id: 2,
     title: '[ NPTEL INSTITUTIONAL TOPPER ]',
     detail: 'Elite institutional recognition for maintaining top-tier academic standing across national NPTEL assessments.',
-    Icon: Medal,
   },
 ];
 
@@ -70,6 +68,13 @@ const certifications: CertData[] = [
   { id: 3, title: 'Joy of Computing in Python', issuer: 'NPTEL', seal: 'SILVER' },
   { id: 4, title: 'Data Analytics with Python', issuer: 'NPTEL', seal: 'ELITE' },
   { id: 5, title: 'Database Management Systems',issuer: 'NPTEL', seal: 'COMPLETED' },
+  {
+    id: 6,
+    title: 'Certificate of Consistency',
+    issuer: 'INSTITUTIONAL',
+    detail: 'Awarded by college administration for maintaining a flawless 100% academic attendance record across three consecutive semesters (Sem 3, 4, & 5).',
+    seal: 'VERIFIED',
+  },
 ];
 
 const combatLog: YearGroup[] = [
@@ -223,13 +228,19 @@ const GeoSeal: React.FC<{ seal: Seal }> = ({ seal }) => {
       stroke: '#3a3a3a', fill: 'rgba(50,50,50,0.3)',
       cls: 'seal-done', label: 'DONE',
     },
+    VERIFIED: {
+      points: '25,4 46,25 25,46 4,25',
+      stroke: '#4ade80', fill: 'rgba(74, 222, 128, 0.12)',
+      cls: 'seal-verified', label: 'VRFD',
+    },
   };
 
   const { points, stroke, fill, cls, label } = configs[seal];
   const glowColor =
     seal === 'GOLD' ? 'rgba(212,175,55,0.4)' :
     seal === 'SILVER' ? 'rgba(192,192,192,0.3)' :
-    seal === 'ELITE' ? 'rgba(168,85,247,0.4)' : 'none';
+    seal === 'ELITE' ? 'rgba(168,85,247,0.4)' :
+    seal === 'VERIFIED' ? 'rgba(74,222,128,0.4)' : 'none';
 
   return (
     <div className={`geo-seal ${cls}`}>
@@ -360,7 +371,109 @@ const MatrixTrophy: React.FC = () => {
 };
 
 /* ─────────────────────────────────────────────────────────────────
-   3D TILT CARD — reusable wrapper
+   LOG POSE SVG WIREFRAME
+─────────────────────────────────────────────────────────────────── */
+const LogPoseIcon: React.FC<{ iconColor?: string }> = ({ iconColor = '#D4AF37' }) => (
+  <svg className="log-pose-svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Log Pose compass">
+    <circle cx="28" cy="28" r="24" stroke={iconColor} strokeWidth="1" opacity="0.6" />
+    <ellipse cx="28" cy="28" rx="24" ry="10" stroke={iconColor} strokeWidth="0.7" opacity="0.35" />
+    <ellipse cx="28" cy="28" rx="24" ry="18" stroke={iconColor} strokeWidth="0.7" opacity="0.25" />
+    <ellipse cx="28" cy="28" rx="10" ry="24" stroke={iconColor} strokeWidth="0.7" opacity="0.35" />
+    <line x1="28" y1="4" x2="28" y2="52" stroke={iconColor} strokeWidth="0.5" opacity="0.2" />
+    <line x1="4" y1="28" x2="52" y2="28" stroke={iconColor} strokeWidth="0.5" opacity="0.2" />
+    <g className="log-pose-needle">
+      <line x1="28" y1="28" x2="28" y2="10" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+      <polygon points="28,8 30,14 28,12 26,14" fill={iconColor} opacity="0.9" />
+    </g>
+    <circle cx="28" cy="28" r="3" fill={iconColor} opacity="0.85" />
+    <circle cx="28" cy="28" r="1.2" fill="rgba(255,255,255,0.5)" />
+    <line x1="28" y1="4" x2="28" y2="7" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="28" y1="49" x2="28" y2="52" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="4" y1="28" x2="7" y2="28" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="49" y1="28" x2="52" y2="28" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+/* ─────────────────────────────────────────────────────────────────
+   GRAND LINE SEA
+─────────────────────────────────────────────────────────────────── */
+const GrandLineSea: React.FC = () => (
+  <div className="grand-line-sea" aria-hidden="true">
+    <svg className="grand-line-wave" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path className="wave-path wave-path--1" d="M0,40 C150,10 300,70 450,40 C600,10 750,70 900,40 C1050,10 1150,60 1200,40 L1200,80 L0,80 Z" />
+      <path className="wave-path wave-path--2" d="M0,50 C200,20 350,65 500,45 C650,25 800,65 950,45 C1050,30 1150,55 1200,50 L1200,80 L0,80 Z" />
+      <path className="wave-path wave-path--3" d="M0,60 C100,45 250,72 400,58 C550,44 700,72 850,58 C1000,44 1100,65 1200,60 L1200,80 L0,80 Z" />
+    </svg>
+    <svg className="sea-particles" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      {[70, 180, 290, 420, 540, 660, 780, 900, 1020, 1130].map((cx, i) => (
+        <circle key={cx} className={`sea-dot sea-dot--${(i % 3) + 1}`} cx={cx} cy={30 + (i % 4) * 8} r="1.5" />
+      ))}
+    </svg>
+  </div>
+);
+
+/* ─────────────────────────────────────────────────────────────────
+   GRAND LINE CARD
+─────────────────────────────────────────────────────────────────── */
+const GrandLineCard: React.FC<{
+  title: string;
+  detail: string;
+  floatIndex: number;
+  triggered: boolean;
+}> = ({ title, detail, floatIndex, triggered }) => {
+  const revealed = useCryptoReveal(title, triggered);
+  return (
+    <div className={`grand-line-card-wrap grand-line-card-wrap--${floatIndex}`}>
+      <div className="grand-line-card">
+        {/* Rotating border beam */}
+        <div className="gl-border-beam" />
+
+        {/* Top-left corner accent */}
+        <svg className="gl-corner-tl" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 20 L0 0 L20 0" stroke="rgba(212,175,55,0.5)" strokeWidth="1.5" fill="none" />
+        </svg>
+        {/* Bottom-right corner accent */}
+        <svg className="gl-corner-br" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0 L20 20 L0 20" stroke="rgba(212,175,55,0.3)" strokeWidth="1.5" fill="none" />
+        </svg>
+
+        {/* Scan-line overlay */}
+        <div className="gl-scanlines" />
+
+        {/* Card Content */}
+        <div className="gl-content">
+          {/* Log Pose icon wrapper — spins slowly */}
+          <div className="gl-icon-wrap">
+            <div className="gl-icon-ring" />
+            <LogPoseIcon />
+          </div>
+
+          {/* Text group */}
+          <div className="gl-text-group">
+            {/* System-log prefix */}
+            <span className="gl-sys-prefix">SYS.RECORD &gt;&gt;</span>
+            <p className="gl-title crypto-text" style={{ mixBlendMode: triggered ? 'normal' : 'screen' }}>
+              {revealed}
+            </p>
+            <p className="gl-detail">{detail}</p>
+          </div>
+        </div>
+
+        {/* Bottom data-bar */}
+        <div className="gl-data-bar">
+          <span className="gl-data-tag">GRAND_LINE</span>
+          <div className="gl-data-dots">
+            <span /><span /><span />
+          </div>
+          <span className="gl-data-tag">VERIFIED</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   3D TILT CARD — reusable wrapper (used by cert & combat cards)
 ───────────────────────────────────────────────────────────────── */
 const TiltCard: React.FC<{ children: React.ReactNode; className?: string; style?: React.CSSProperties }> = ({ children, className = '', style }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -372,12 +485,10 @@ const TiltCard: React.FC<{ children: React.ReactNode; className?: string; style?
   const rotateY = useTransform(xSpring, [-0.5, 0.5], ['-8deg', '8deg']);
 
   const handleMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (IS_TOUCH || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
-
-    // Chromatic aberration via CSS custom properties
     const xPct = (e.clientX - rect.left) / rect.width;
     ref.current.style.setProperty('--mouse-x', `${xPct}`);
     ref.current.style.setProperty('--spot-x', `${e.clientX - rect.left}px`);
@@ -385,13 +496,26 @@ const TiltCard: React.FC<{ children: React.ReactNode; className?: string; style?
   }, [x, y]);
 
   const handleLeave = useCallback(() => {
+    if (IS_TOUCH || !ref.current) return;
     x.set(0);
     y.set(0);
-    if (ref.current) {
-      ref.current.style.setProperty('--spot-x', '-999px');
-      ref.current.style.setProperty('--spot-y', '-999px');
-    }
+    ref.current.style.setProperty('--spot-x', '-999px');
+    ref.current.style.setProperty('--spot-y', '-999px');
   }, [x, y]);
+
+  if (IS_TOUCH) {
+    return (
+      <motion.div
+        ref={ref}
+        className={className}
+        style={style}
+        whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.1 }}
+      >
+        {children}
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -403,62 +527,6 @@ const TiltCard: React.FC<{ children: React.ReactNode; className?: string; style?
     >
       {children}
     </motion.div>
-  );
-};
-
-/* ─────────────────────────────────────────────────────────────────
-   HOLO CARD (Apex Achievements)
-───────────────────────────────────────────────────────────────── */
-const HoloCard: React.FC<{ title: string; detail: string; Icon: React.ElementType; triggered: boolean }> = ({ title, detail, Icon, triggered }) => {
-  const revealed = useCryptoReveal(title, triggered);
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const xSpring = useSpring(x, { stiffness: 300, damping: 30 });
-  const ySpring = useSpring(y, { stiffness: 300, damping: 30 });
-  const rotateX = useTransform(ySpring, [-0.5, 0.5], ['10deg', '-10deg']);
-  const rotateY = useTransform(xSpring, [-0.5, 0.5], ['-10deg', '10deg']);
-  const glareX  = useTransform(xSpring, [-0.5, 0.5], ['100%', '0%']);
-  const glareY  = useTransform(ySpring, [-0.5, 0.5], ['100%', '0%']);
-
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
-
-  return (
-    <div className="holo-wrapper" style={{ perspective: 1000 }}>
-      <motion.div
-        ref={ref}
-        onMouseMove={handleMove}
-        onMouseLeave={() => { x.set(0); y.set(0); }}
-        className="holo-card"
-        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-      >
-        <div className="holo-border-beam" />
-        <div className="holo-content" style={{ transform: 'translateZ(30px)' }}>
-          <div className="holo-icon-wrap">
-            <Icon size={24} color="#D4AF37" strokeWidth={1.5} />
-          </div>
-          <div className="holo-text-group">
-            <p className="holo-title crypto-text" style={{ mixBlendMode: triggered ? 'normal' : 'screen' }}>
-              {revealed}
-            </p>
-            <p className="holo-detail">{detail}</p>
-          </div>
-        </div>
-        <motion.div
-          className="holo-glare"
-          style={{
-            background: useTransform(
-              () => `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255,255,255,0.15) 0%, transparent 60%)`
-            ),
-          }}
-        />
-      </motion.div>
-    </div>
   );
 };
 
@@ -634,10 +702,19 @@ const Trophies: React.FC = () => {
             index={0}
             onTriggered={useCallback(() => setApexTriggered(true), [])}
           >
-            <div className="apex-grid">
-              {apexAchievements.map(({ id, title, detail, Icon }) => (
-                <HoloCard key={id} title={title} detail={detail} Icon={Icon} triggered={apexTriggered} />
-              ))}
+            <div className="grand-line-sea-container">
+              <div className="apex-grid">
+                {apexAchievements.map(({ id, title, detail }, idx) => (
+                  <GrandLineCard
+                    key={id}
+                    title={title}
+                    detail={detail}
+                    floatIndex={idx}
+                    triggered={apexTriggered}
+                  />
+                ))}
+              </div>
+              <GrandLineSea />
             </div>
           </TimelineNode>
 

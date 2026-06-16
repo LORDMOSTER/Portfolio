@@ -93,6 +93,11 @@
   color: var(--text-muted);
 }
 
+body.light-mode .t-card-header {
+  background-color: rgba(184, 134, 11, 0.08);
+  border-bottom-color: rgba(184, 134, 11, 0.2);
+}
+
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -145,6 +150,10 @@
   fill: none;
   stroke: rgba(255, 255, 255, 0.05);
   stroke-width: 4;
+}
+
+body.light-mode .lc-ring-bg {
+  stroke: rgba(184, 134, 11, 0.15);
 }
 
 .lc-ring-progress {
@@ -274,6 +283,10 @@
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
   overflow: hidden;
+}
+
+body.light-mode .lang-track {
+  background-color: rgba(184, 134, 11, 0.15);
 }
 
 .lang-fill {

@@ -30,6 +30,12 @@
   );
 }
 
+body.light-mode .kinetic-ribbon-wrapper {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
 .kinetic-ribbon-content {
   display: flex;
   white-space: nowrap;

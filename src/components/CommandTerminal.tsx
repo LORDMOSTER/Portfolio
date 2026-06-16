@@ -24,13 +24,13 @@ const MatrixRain: React.FC<{ onDone: () => void }> = ({ onDone }) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    canvas.width  = window.innerWidth;
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const fontSize = 14;
-    const cols     = Math.floor(canvas.width / fontSize);
-    const drops    = Array(cols).fill(1);
-    const chars    = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array(cols).fill(1);
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     let frame: number;
     const draw = () => {
@@ -73,6 +73,71 @@ const MatrixRain: React.FC<{ onDone: () => void }> = ({ onDone }) => {
     </motion.div>
   );
 };
+
+/* ─────────────────────────────────────────────────────────────────
+   GOLD RAIN — digital wealth cascade
+───────────────────────────────────────────────────────────────── */
+const GoldRain: React.FC<{ onDone: () => void }> = ({ onDone }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 15;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array(cols).fill(1);
+    const chars = '₿Ξ◆▲★⊕∞∑∆∇01ABCDEF⬡✦∏';
+
+    let frame: number;
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      drops.forEach((drop, i) => {
+        const alpha = Math.random() > 0.88 ? 1 : 0.55;
+        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+        ctx.font = `${fontSize}px "Fira Code", monospace`;
+        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drop * fontSize);
+        if (drop * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      });
+      frame = requestAnimationFrame(draw);
+    };
+
+    draw();
+    const timer = setTimeout(() => { cancelAnimationFrame(frame); onDone(); }, 4500);
+    return () => { cancelAnimationFrame(frame); clearTimeout(timer); };
+  }, [onDone]);
+
+  return (
+    <motion.div
+      className="gold-rain-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <canvas ref={canvasRef} className="gold-rain-canvas" />
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   GLITCH OVERLAY — RGB-split scanline distortion
+───────────────────────────────────────────────────────────────── */
+const GlitchOverlay: React.FC = () => (
+  <div className="glitch-overlay" aria-hidden="true">
+    <div className="glitch-layer glitch-layer--red" />
+    <div className="glitch-layer glitch-layer--cyan" />
+    <div className="glitch-scanlines" />
+  </div>
+);
 
 /* ─────────────────────────────────────────────────────────────────
    TYPEWRITER STREAM
@@ -134,21 +199,28 @@ function useTypewriterStream(lines: string[], active: boolean, onDone: () => voi
 let lineCounter = 0;
 
 const CommandTerminal: React.FC = () => {
-  const [open, setOpen]             = useState(false);
-  const [input, setInput]           = useState('');
-  const [lines, setLines]           = useState<TerminalLine[]>([]);
-  const [streaming, setStreaming]   = useState(false);
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('');
+  const [lines, setLines] = useState<TerminalLine[]>([]);
+  const [streaming, setStreaming] = useState(false);
   const [streamTarget, setStreamTarget] = useState<'whoami' | 'skills'>('whoami');
   const [showMatrix, setShowMatrix] = useState(false);
-  const [xrayMode, setXrayMode]     = useState(false);
-  const inputRef  = useRef<HTMLInputElement>(null);
+  const [xrayMode, setXrayMode] = useState(false);
+  const [glitchMode, setGlitchMode] = useState(false);
+  const [showGoldRain, setShowGoldRain] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
   /* ── X-Ray mode body class sync ─────────────────────── */
   useEffect(() => {
     document.body.classList.toggle('xray-mode', xrayMode);
   }, [xrayMode]);
+
+  /* ── Glitch mode body class sync ────────────────────── */
+  useEffect(() => {
+    document.body.classList.toggle('glitch-mode', glitchMode);
+  }, [glitchMode]);
 
   /* ── Global keyboard handler + custom event ─────────── */
   useEffect(() => {
@@ -332,34 +404,61 @@ const CommandTerminal: React.FC = () => {
       /* ── linkedin ── */
       case cmd === 'open --linkedin': {
         pushLine('output', '[LAUNCH] Opening LinkedIn profile...');
-        setTimeout(() => window.open('https://linkedin.com/in/srihari-p-v', '_blank'), 400);
+        setTimeout(() => window.open('https://www.linkedin.com/in/srihari-p-v-bb8560341/', '_blank'), 400);
         setTimeout(() => pushLine('system', '[SYS] External link opened in new tab.'), 600);
         break;
       }
 
-      /* ── navigate ── */
-      case cmd === 'goto home':
-      case cmd === 'cd /home': {
-        pushLine('system', '[NAV] Navigating to Home...');
-        setTimeout(() => { setOpen(false); navigate('/'); }, 500);
+      /* ── ◆ GLITCH MODE ─────────────────────────────────────── */
+      case cmd === 'glitch --enable': {
+        setGlitchMode(true);
+        pushLine('output', '');
+        pushLine('system', '[GLITCH] RGB-split distortion mode — ENABLED ⚡');
+        pushLine('output', '  Scanline interference + chromatic aberration active.');
+        pushLine('output', '  Type "glitch --disable" to restore clean render.');
+        pushLine('output', '');
         break;
       }
-      case cmd === 'goto arsenal':
-      case cmd === 'cd /arsenal': {
-        pushLine('system', '[NAV] Navigating to Project Arsenal...');
-        setTimeout(() => { setOpen(false); navigate('/arsenal'); }, 500);
+      case cmd === 'glitch --disable': {
+        setGlitchMode(false);
+        pushLine('system', '[GLITCH] Distortion cleared. Render — RESTORED.');
         break;
       }
-      case cmd === 'goto contact':
-      case cmd === 'cd /contact': {
-        pushLine('system', '[NAV] Navigating to Contact...');
-        setTimeout(() => { setOpen(false); navigate('/contact'); }, 500);
+
+      /* ── ◆ GOLD RAIN ──────────────────────────────────────────── */
+      case cmd === 'rain --gold': {
+        pushLine('output', '');
+        pushLine('system', '[RAIN] Initiating gold cascade... 4.5s runtime.');
+        pushLine('output', '  ₿ Ξ ◆ ▲ ★  deploying digital wealth...');
+        setTimeout(() => setShowGoldRain(true), 400);
         break;
       }
-      case cmd === 'goto trophies':
-      case cmd === 'cd /trophies': {
-        pushLine('system', '[NAV] Navigating to Hall of Records...');
-        setTimeout(() => { setOpen(false); navigate('/trophies'); }, 500);
+
+      /* ── ◆ PORTFOLIO SCAN ─────────────────────────────────────── */
+      case cmd === 'scan --portfolio': {
+        pushLine('output', '');
+        pushLine('system', '[SCAN] Initializing portfolio diagnostics...');
+        const scanSeq: Array<{ delay: number; type: TerminalLine['type']; content: string }> = [
+          { delay: 250, type: 'output', content: '  [████░░░░░░░░░░░░░░░░] 20% — Identity matrix...' },
+          { delay: 650, type: 'output', content: '  [████████░░░░░░░░░░░░] 40% — Project dossiers...' },
+          { delay: 1050, type: 'output', content: '  [████████████░░░░░░░░] 60% — Skill graph...' },
+          { delay: 1450, type: 'output', content: '  [████████████████░░░░] 80% — Achievement index...' },
+          { delay: 1850, type: 'output', content: '  [████████████████████] 100% — SCAN COMPLETE ✓' },
+          { delay: 2050, type: 'output', content: '' },
+          { delay: 2150, type: 'system', content: '[RESULT] ──────────────────────────────────────────' },
+          { delay: 2300, type: 'output', content: '  ENTITY         : Srihari P V' },
+          { delay: 2450, type: 'output', content: '  STACK           : React · TypeScript · Python · Java' },
+          { delay: 2600, type: 'output', content: '  PROJECTS        : 10 deployed · 2 in production' },
+          { delay: 2750, type: 'output', content: '  CERTIFICATIONS  : 5 · Gold ×2 · Silver ×1 · Elite ×1' },
+          { delay: 2900, type: 'output', content: '  LEETCODE        : Guardian · 1800+ rating' },
+          { delay: 3050, type: 'output', content: '  AWARDS          : 12 competitive podiums secured' },
+          { delay: 3200, type: 'output', content: '  THREAT LEVEL    : ZERO — friendly unit confirmed' },
+          { delay: 3350, type: 'output', content: '' },
+          { delay: 3450, type: 'system', content: '[SYS] Integrity check passed. Status: OPTIMAL ✓' },
+        ];
+        scanSeq.forEach(({ delay, type, content }) => {
+          setTimeout(() => pushLine(type, content), delay);
+        });
         break;
       }
 
@@ -420,20 +519,13 @@ const CommandTerminal: React.FC = () => {
       /* ── help ── */
       case cmd === 'help': {
         pushLine('output', '');
-        pushLine('output', '  ── IDENTITY ───────────────────────────────────────');
-        pushLine('output', '  whoami               — Stream identity credentials');
-        pushLine('output', '  skills               — Display full tech skill matrix');
-        pushLine('output', '  cat achievements     — View awards & highlights');
-        pushLine('output', '');
-        pushLine('output', '  ── FILES ──────────────────────────────────────────');
-        pushLine('output', '  fetch --resume       — Download resume PDF');
-        pushLine('output', '  ls --projects        — List all projects');
-        pushLine('output', '');
-        pushLine('output', '  ── NAVIGATION ─────────────────────────────────────');
-        pushLine('output', '  goto home            — Navigate to Home');
-        pushLine('output', '  goto arsenal         — Navigate to Projects');
-        pushLine('output', '  goto trophies        — Navigate to Trophies');
-        pushLine('output', '  goto contact         — Navigate to Contact');
+        pushLine('output', '  ── SPECIAL OPS ─────────────────────────────────────');
+        pushLine('output', '  glitch --enable      — RGB-split distortion overlay');
+        pushLine('output', '  glitch --disable     — Restore clean render');
+        pushLine('output', '  rain --gold          — Gold cascade sequence  [4.5s]');
+        pushLine('output', '  scan --portfolio     — Run full diagnostic scan');
+        pushLine('output', '  sudo view --xray     — Toggle wireframe mode');
+        pushLine('output', '  sudo view --default  — Restore normal render');
         pushLine('output', '');
         pushLine('output', '  ── EXTERNAL ───────────────────────────────────────');
         pushLine('output', '  open --github        — Open GitHub profile');
@@ -443,8 +535,6 @@ const CommandTerminal: React.FC = () => {
         pushLine('output', '  ── SYSTEM ─────────────────────────────────────────');
         pushLine('output', '  status               — Show system status');
         pushLine('output', '  uptime               — Show session uptime');
-        pushLine('output', '  sudo view --xray     — Toggle wireframe mode');
-        pushLine('output', '  sudo view --default  — Restore normal render');
         pushLine('output', '  theme --light        — Toggle light mode');
         pushLine('output', '  theme --dark         — Restore dark mode');
         pushLine('output', '  sudo hire            — [CLASSIFIED]');
@@ -473,7 +563,9 @@ const CommandTerminal: React.FC = () => {
     <>
       <AnimatePresence>
         {showMatrix && <MatrixRain key="matrix" onDone={handleMatrixDone} />}
+        {showGoldRain && <GoldRain key="gold-rain" onDone={() => setShowGoldRain(false)} />}
       </AnimatePresence>
+      {glitchMode && <GlitchOverlay />}
 
       <AnimatePresence>
         {open && (
@@ -504,6 +596,11 @@ const CommandTerminal: React.FC = () => {
                 </div>
                 <span className="terminal-title mono-text">SRIHARI_PV — SYSTEM_SHELL v3.0</span>
                 <span className="terminal-hint mono-text">ESC to close</span>
+                <button
+                  className="terminal-close-mobile"
+                  onClick={() => setOpen(false)}
+                  aria-label="Close terminal"
+                >✕</button>
               </div>
 
               {/* Output area */}

@@ -170,7 +170,111 @@
   transform: translateZ(0);
 }
 
-/* ── Apex Grid (HoloCards) ───────────────────────────────────── */
+/* ── Anti-Gravity Float Keyframes ────────────────────────── */
+@keyframes anti-gravity {
+  0%   { transform: translateY(0px);
+          box-shadow:
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 0 1px rgba(212,175,55,0.12),
+            inset 0 1px 0 rgba(255,255,255,0.06); }
+  50%  { transform: translateY(-15px);
+          box-shadow:
+            0 28px 60px rgba(0,0,0,0.55),
+            0 0 0 1px rgba(212,175,55,0.18),
+            0 0 40px -12px rgba(212,175,55,0.15),
+            inset 0 1px 0 rgba(255,255,255,0.09); }
+  100% { transform: translateY(0px);
+          box-shadow:
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 0 1px rgba(212,175,55,0.12),
+            inset 0 1px 0 rgba(255,255,255,0.06); }
+}
+
+@keyframes log-pose-needle-spin {
+  0%   { transform-origin: 28px 28px; transform: rotate(0deg); }
+  20%  { transform-origin: 28px 28px; transform: rotate(8deg); }
+  40%  { transform-origin: 28px 28px; transform: rotate(-5deg); }
+  60%  { transform-origin: 28px 28px; transform: rotate(3deg); }
+  80%  { transform-origin: 28px 28px; transform: rotate(-2deg); }
+  100% { transform-origin: 28px 28px; transform: rotate(0deg); }
+}
+
+@keyframes gl-border-rotate {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes wave-drift--1 {
+  0%   { d: path("M0,40 C150,10 300,70 450,40 C600,10 750,70 900,40 C1050,10 1150,60 1200,40 L1200,80 L0,80 Z"); }
+  50%  { d: path("M0,45 C150,15 300,65 450,45 C600,15 750,65 900,45 C1050,15 1150,55 1200,45 L1200,80 L0,80 Z"); }
+  100% { d: path("M0,40 C150,10 300,70 450,40 C600,10 750,70 900,40 C1050,10 1150,60 1200,40 L1200,80 L0,80 Z"); }
+}
+
+@keyframes wave-drift--2 {
+  0%   { d: path("M0,50 C200,20 350,65 500,45 C650,25 800,65 950,45 C1050,30 1150,55 1200,50 L1200,80 L0,80 Z"); }
+  50%  { d: path("M0,46 C200,24 350,61 500,49 C650,29 800,61 950,49 C1050,34 1150,51 1200,46 L1200,80 L0,80 Z"); }
+  100% { d: path("M0,50 C200,20 350,65 500,45 C650,25 800,65 950,45 C1050,30 1150,55 1200,50 L1200,80 L0,80 Z"); }
+}
+
+@keyframes wave-drift--3 {
+  0%   { d: path("M0,60 C100,45 250,72 400,58 C550,44 700,72 850,58 C1000,44 1100,65 1200,60 L1200,80 L0,80 Z"); }
+  50%  { d: path("M0,56 C100,49 250,68 400,62 C550,48 700,68 850,62 C1000,48 1100,61 1200,56 L1200,80 L0,80 Z"); }
+  100% { d: path("M0,60 C100,45 250,72 400,58 C550,44 700,72 850,58 C1000,44 1100,65 1200,60 L1200,80 L0,80 Z"); }
+}
+
+@keyframes sea-dot-pulse {
+  0%, 100% { opacity: 0.15; r: 1.5; }
+  50%       { opacity: 0.5;  r: 2.5; }
+}
+
+/* ── Grand Line Sea Container ───────────────────────────── */
+.grand-line-sea-container {
+  position: relative;
+  padding-bottom: 56px;  /* room for the wave below the cards */
+}
+
+.grand-line-sea {
+  position: absolute;
+  bottom: 0;
+  left: -16px;
+  right: -16px;
+  height: 56px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.grand-line-wave {
+  width: 100%;
+  height: 100%;
+}
+
+.wave-path--1 {
+  fill: rgba(212, 175, 55, 0.06);
+  animation: wave-drift--1 8s ease-in-out infinite;
+}
+
+.wave-path--2 {
+  fill: rgba(212, 175, 55, 0.04);
+  animation: wave-drift--2 6s ease-in-out infinite;
+}
+
+.wave-path--3 {
+  fill: rgba(212, 175, 55, 0.025);
+  animation: wave-drift--3 4.5s ease-in-out infinite;
+}
+
+.sea-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sea-dot--1 { fill: rgba(212,175,55,0.35); animation: sea-dot-pulse 4s ease-in-out infinite; }
+.sea-dot--2 { fill: rgba(212,175,55,0.25); animation: sea-dot-pulse 5.5s ease-in-out infinite 0.8s; }
+.sea-dot--3 { fill: rgba(212,175,55,0.20); animation: sea-dot-pulse 3.5s ease-in-out infinite 1.6s; }
+
+/* ── Apex Grid ──────────────────────────────────────────── */
 .apex-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
@@ -178,101 +282,220 @@
   margin-bottom: 0;
 }
 
-.holo-wrapper {
-  position: relative;
-  width: 100%;
-  height: 160px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ── Grand Line Card — Levitating Data Sail ────────────────── */
+.grand-line-card-wrap {
+  /* Perspective for subtle 3D shadow depth */
+  perspective: 1200px;
 }
 
-.holo-card {
+.grand-line-card-wrap--0 .grand-line-card {
+  animation: anti-gravity 6s ease-in-out infinite;
+}
+
+.grand-line-card-wrap--1 .grand-line-card {
+  animation: anti-gravity 6.8s ease-in-out infinite;
+  animation-delay: -2.4s; /* stagger so card 2 bobs opposite phase */
+}
+
+.grand-line-card {
   position: relative;
-  width: 100%;
-  height: 100%;
-  background: rgba(12, 12, 12, 0.6);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  padding: 24px;
+  padding: 24px 24px 20px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(212, 175, 55, 0.05);
+
+  /* Nautical hull shape: sharp top-right, curved bottom-left */
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 22px) 0%,
+    100% 22px,
+    100% 100%,
+    22px 100%,
+    0% calc(100% - 22px)
+  );
+
+  /* Premium glassmorphism */
+  background: rgba(10, 8, 4, 0.55);
   backdrop-filter: blur(12px);
-  will-change: transform;
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Ultra-thin 1px nautical border */
+  border: 1px solid rgba(212, 175, 55, 0.15);
+
+  /* Inset tech-glow (no external bleed) */
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(212,175,55,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 0 30px rgba(212,175,55,0.03);
+
+  will-change: transform, box-shadow;
+  cursor: default;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.holo-border-beam {
+/* Rotating conic border beam (same technique as holo-border-beam) */
+.gl-border-beam {
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: conic-gradient(transparent, rgba(212,175,55,0.1), rgba(212,175,55,0.8), transparent 25%);
-  animation: holoRotate 4s linear infinite;
+  background: conic-gradient(transparent, rgba(212,175,55,0.06), rgba(212,175,55,0.5), transparent 20%);
+  animation: gl-border-rotate 5s linear infinite;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   padding: 1px;
   pointer-events: none;
+  border-radius: 0; /* matches clip-path */
 }
 
-@keyframes holoRotate {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Corner bracket SVGs */
+.gl-corner-tl,
+.gl-corner-br {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
 }
 
-.holo-glare {
+.gl-corner-tl { top: 0; left: 0; }
+.gl-corner-br { bottom: 0; right: 0; }
+
+/* Subtle horizontal scan-line texture */
+.gl-scanlines {
   position: absolute;
   inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(255,255,255,0.012) 3px,
+    rgba(255,255,255,0.012) 4px
+  );
   pointer-events: none;
-  z-index: 10;
-  mix-blend-mode: screen;
+  z-index: 0;
 }
 
-.holo-content {
+/* Card content row */
+.gl-content {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
-  z-index: 5;
-  pointer-events: none;
+  gap: 18px;
+  position: relative;
+  z-index: 2;
 }
 
-.holo-icon-wrap {
+/* Log Pose Icon wrapper */
+.gl-icon-wrap {
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.05) 100%);
-  border: 1px solid rgba(212,175,55,0.4);
+  position: relative;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(212,175,55,0.2);
 }
 
-.holo-text-group {
+/* Outer pulsing ring around the icon */
+.gl-icon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,0.3);
+  background: radial-gradient(circle at center,
+    rgba(212,175,55,0.08) 0%,
+    rgba(212,175,55,0.02) 60%,
+    transparent 100%
+  );
+  box-shadow: inset 0 0 12px rgba(212,175,55,0.1);
+}
+
+/* The SVG itself */
+.log-pose-svg {
+  width: 44px;
+  height: 44px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Compass needle slow oscillation */
+.log-pose-needle {
+  animation: log-pose-needle-spin 8s ease-in-out infinite;
+}
+
+/* Text group */
+.gl-text-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
-.holo-title {
+.gl-sys-prefix {
   font-family: 'Fira Code', monospace;
-  font-size: 0.95rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: rgba(212,175,55,0.4);
+  text-transform: uppercase;
+}
+
+.gl-title {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #D4AF37;
   letter-spacing: 0.04em;
   margin: 0;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.holo-detail {
-  font-size: 0.88rem;
-  color: #707070;
-  line-height: 1.5;
+.gl-detail {
+  font-size: 0.84rem;
+  color: rgba(160,150,130,0.85);
+  line-height: 1.55;
   margin: 0;
+}
+
+/* Bottom data-bar */
+.gl-data-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid rgba(212,175,55,0.08);
+  padding-top: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.gl-data-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(212,175,55,0.35);
+  text-transform: uppercase;
+}
+
+.gl-data-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.gl-data-dots span {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(212,175,55,0.3);
 }
 
 /* ── Crypto Text Reveal ─────────────────────────────────────── */
@@ -453,6 +676,16 @@
   .trophies-hero { flex-direction: column; }
   .apex-grid { grid-template-columns: 1fr; }
   .cert-grid { grid-template-columns: 1fr; }
+
+  /* Reduce float amplitude on mobile */
+  @keyframes anti-gravity {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes anti-gravity-light {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+  }
   
   .timeline-spine-wrap {
     margin-right: 24px;
@@ -476,4 +709,153 @@
   .timeline-dot {
     display: none;
   }
+
+  /* Pause float on very small screens for performance */
+  .grand-line-card {
+    animation: none !important;
+    transform: none !important;
+  }
 }
+
+/* ════ LIGHT MODE OVERRIDES ════ */
+body.light-mode .trophies-hero-text p {
+  color: #4A3F30;
+}
+
+body.light-mode .timeline-label {
+  color: #5A5040;
+}
+
+body.light-mode .timeline-label::after {
+  background: linear-gradient(to right, #d4c9b0, transparent);
+}
+
+body.light-mode .timeline-spine {
+  background: #d4c9b0;
+}
+
+body.light-mode .timeline-index {
+  color: #5A5040;
+}
+
+/* ── Grand Line Card — Light Mode ───────────────────────── */
+body.light-mode .grand-line-card {
+  background: rgba(237, 234, 222, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(184, 134, 11, 0.25);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(184,134,11,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 0 30px rgba(184,134,11,0.04);
+}
+
+body.light-mode .gl-border-beam {
+  background: conic-gradient(transparent, rgba(184,134,11,0.06), rgba(184,134,11,0.4), transparent 20%);
+}
+
+body.light-mode .gl-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0,0,0,0.015) 3px,
+    rgba(0,0,0,0.015) 4px
+  );
+}
+
+body.light-mode .gl-icon-ring {
+  border-color: rgba(184,134,11,0.3);
+  background: radial-gradient(circle at center,
+    rgba(184,134,11,0.1) 0%,
+    rgba(184,134,11,0.03) 60%,
+    transparent 100%
+  );
+  box-shadow: inset 0 0 12px rgba(184,134,11,0.08);
+}
+
+body.light-mode .gl-sys-prefix {
+  color: rgba(184,134,11,0.5);
+}
+
+body.light-mode .gl-title {
+  color: #b8860b;
+}
+
+body.light-mode .gl-detail {
+  color: #4A3F30;
+}
+
+body.light-mode .gl-data-bar {
+  border-top-color: rgba(184,134,11,0.12);
+}
+
+body.light-mode .gl-data-tag {
+  color: rgba(184,134,11,0.45);
+}
+
+body.light-mode .gl-data-dots span {
+  background: rgba(184,134,11,0.35);
+}
+
+body.light-mode .wave-path--1 { fill: rgba(184,134,11,0.07); }
+body.light-mode .wave-path--2 { fill: rgba(184,134,11,0.05); }
+body.light-mode .wave-path--3 { fill: rgba(184,134,11,0.03); }
+
+body.light-mode .sea-dot--1,
+body.light-mode .sea-dot--2,
+body.light-mode .sea-dot--3 { fill: rgba(184,134,11,0.4); }
+
+/* Anti-gravity shadow is lighter in light mode */
+body.light-mode .grand-line-card-wrap--0 .grand-line-card,
+body.light-mode .grand-line-card-wrap--1 .grand-line-card {
+  animation: anti-gravity-light 6s ease-in-out infinite;
+}
+body.light-mode .grand-line-card-wrap--1 .grand-line-card {
+  animation-duration: 6.8s;
+  animation-delay: -2.4s;
+}
+
+@keyframes anti-gravity-light {
+  0%   { transform: translateY(0px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(184,134,11,0.12), inset 0 1px 0 rgba(255,255,255,0.5); }
+  50%  { transform: translateY(-15px);
+          box-shadow: 0 28px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(184,134,11,0.18), 0 0 30px -10px rgba(184,134,11,0.12), inset 0 1px 0 rgba(255,255,255,0.6); }
+  100% { transform: translateY(0px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(184,134,11,0.12), inset 0 1px 0 rgba(255,255,255,0.5); }
+}
+
+body.light-mode .cert-card::before {
+  background: linear-gradient(to right, transparent, #d4c9b0, transparent);
+}
+
+body.light-mode .cert-issuer-badge {
+  color: #5A5040;
+  background: rgba(184, 134, 11, 0.05);
+  border-color: rgba(184, 134, 11, 0.2);
+}
+
+body.light-mode .cert-title {
+  color: #1a1a1a;
+}
+
+body.light-mode .cert-detail {
+  color: #5A5040;
+}
+
+body.light-mode .combat-connector {
+  background: #d4c9b0;
+}
+
+body.light-mode .combat-title {
+  color: #1a1a1a;
+}
+
+body.light-mode .combat-prize {
+  color: #b8860b;
+  background: rgba(184, 134, 11, 0.05);
+  border-color: rgba(184, 134, 11, 0.2);
+}
+
+

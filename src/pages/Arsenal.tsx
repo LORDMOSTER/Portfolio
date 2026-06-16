@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Mic, Map, Coffee, MessageSquare, Brain, Terminal, Smile, Gamepad2, Palette, Music } from 'lucide-react';
 import './Arsenal.css';
 
+const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
 /* ─── Mathematical Reactor Core ──────────────────────────────────────
    Physics: 4 rings tilted in 3D space, projected to 2D via parametric
    equations. Each particle's (x,y) is computed every frame using:
@@ -33,12 +35,17 @@ const ReactorCore: React.FC = () => {
   });
 
   // 4 orbital rings: inclination => b = a * cos(inc)
-  const rings = [
-    { a: 118, inc: 0,  phi: 0,       omP: 0.18,  omR: 0.04,  n: 3, color: '#D4AF37', sw: 1.5, dash: '' },
-    { a: 105, inc: 62, phi: 0,       omP: -0.45, omR: 0,     n: 2, color: '#D4AF37', sw: 1,   dash: '10 8' },
-    { a: 105, inc: 62, phi: PI / 2,  omP: 0.40,  omR: 0,     n: 2, color: '#7A6835', sw: 1,   dash: '10 8' },
-    { a: 80,  inc: 50, phi: PI / 4,  omP: -0.65, omR: 0.07,  n: 1, color: '#D4AF37', sw: 1,   dash: '6 9' },
-  ];
+  const rings = IS_TOUCH
+    ? [
+        { a: 118, inc: 0,  phi: 0,       omP: 0.18,  omR: 0.04,  n: 2, color: '#D4AF37', sw: 1.5, dash: '' },
+        { a: 80,  inc: 50, phi: PI / 4,  omP: -0.65, omR: 0.07,  n: 1, color: '#D4AF37', sw: 1,   dash: '6 9' },
+      ]
+    : [
+        { a: 118, inc: 0,  phi: 0,       omP: 0.18,  omR: 0.04,  n: 3, color: '#D4AF37', sw: 1.5, dash: '' },
+        { a: 105, inc: 62, phi: 0,       omP: -0.45, omR: 0,     n: 2, color: '#D4AF37', sw: 1,   dash: '10 8' },
+        { a: 105, inc: 62, phi: PI / 2,  omP: 0.40,  omR: 0,     n: 2, color: '#7A6835', sw: 1,   dash: '10 8' },
+        { a: 80,  inc: 50, phi: PI / 4,  omP: -0.65, omR: 0.07,  n: 1, color: '#D4AF37', sw: 1,   dash: '6 9' },
+      ];
 
   // outer 12-gon vertices (static reference frame)
   const dodecagon = Array.from({ length: 12 }, (_, i) => {
@@ -95,7 +102,7 @@ const ReactorCore: React.FC = () => {
       })}
 
       {/* Inner chamber wall */}
-      <circle cx={cx} cy={cy} r="44" stroke="#111" strokeWidth="10" />
+      <circle cx={cx} cy={cy} r="44" stroke="#111" strokeWidth="10" className="reactor-inner-wall" />
       <circle cx={cx} cy={cy} r="44" stroke="#D4AF37" strokeWidth="1" opacity="0.35" />
 
       {/* Rotating diamond core */}
@@ -210,14 +217,14 @@ const Arsenal: React.FC = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-[#D4AF37] uppercase tracking-wider mb-6 mono-text">
             &gt;&gt; PROJECT_ARSENAL
           </h1>
-          <p className="mono-text" style={{ color: '#EAEAEA', fontWeight: 700, fontSize: 'clamp(1.1rem, 2.5vw, 1.75rem)', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.7 }}>
+          <p className="mono-text" style={{ color: 'var(--text-main)', fontWeight: 700, fontSize: 'clamp(1.1rem, 2.5vw, 1.75rem)', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.7 }}>
             ENGINEERED SYSTEMS
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
             <span className="mono-text" style={{ border: '1px solid #D4AF37', color: '#D4AF37', padding: '4px 12px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', background: 'rgba(212,175,55,0.08)', borderRadius: '2px' }}>
               [ LIVE DEPLOYMENTS ]
             </span>
-            <span className="mono-text" style={{ color: '#888', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
+            <span className="mono-text" style={{ color: 'var(--text-muted)', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
               // FULL-STACK &amp; AI
             </span>
           </div>

@@ -3,17 +3,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, CheckCircle2, AlertCircle, Send, Mail, Phone } from 'lucide-react';
 import './Contact.css';
 
-const spotHandlers = (e: React.MouseEvent<HTMLDivElement>) => {
-  const el = e.currentTarget;
-  const r = el.getBoundingClientRect();
-  el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
-  el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
-};
+const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+const toastInitial = IS_TOUCH ? { opacity: 0, y: -50 } : { opacity: 0, x: 50 };
+const toastAnimate = IS_TOUCH ? { opacity: 1, y: 0 }  : { opacity: 1, x: 0  };
+const toastExit    = IS_TOUCH ? { opacity: 0, y: -50 } : { opacity: 0, x: 50 };
 
-const spotLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-  const el = e.currentTarget;
-  el.style.setProperty('--spot-x', `-999px`);
-  el.style.setProperty('--spot-y', `-999px`);
+const spotHandlers = IS_TOUCH ? {} : {
+  onMouseMove: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+    el.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+  },
+  onMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    el.style.setProperty('--spot-x', `-999px`);
+    el.style.setProperty('--spot-y', `-999px`);
+  },
 };
 
 const Contact: React.FC = () => {
@@ -70,7 +76,7 @@ const Contact: React.FC = () => {
             </a>
           </div>
 
-          <div className="status-bento premium-card" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
+          <div className="status-bento premium-card" {...spotHandlers}>
             <h3 className="bento-title mono-text">Availability & Status</h3>
             <ul className="bento-list">
               <li>
@@ -90,7 +96,7 @@ const Contact: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: The Simplified Form */}
-        <div className="terminal-container premium-card mx-4 md:mx-0 w-auto md:w-full" onMouseMove={spotHandlers} onMouseLeave={spotLeave}>
+        <div className="terminal-container premium-card mx-4 md:mx-0 w-auto md:w-full" {...spotHandlers}>
           <div className="terminal-header">
             <div className="terminal-buttons">
               <span className="t-btn close"></span>
@@ -176,11 +182,11 @@ const Contact: React.FC = () => {
 
       <AnimatePresence>
         {status === 'success' && (
-          <motion.div 
+          <motion.div
             className="toast success-toast"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
+            initial={toastInitial}
+            animate={toastAnimate}
+            exit={toastExit}
           >
             <CheckCircle2 size={20} />
             <div className="toast-content mono-text">
@@ -191,11 +197,11 @@ const Contact: React.FC = () => {
         )}
 
         {status === 'error' && (
-          <motion.div 
+          <motion.div
             className="toast error-toast"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
+            initial={toastInitial}
+            animate={toastAnimate}
+            exit={toastExit}
           >
             <AlertCircle size={20} />
             <div className="toast-content mono-text">

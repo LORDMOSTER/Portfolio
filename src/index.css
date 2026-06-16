@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import './styles/premium-card.css';
+@import './styles/mobile.css';
 
 
 :root {
@@ -219,6 +220,13 @@ body.light-mode .card {
   color: #1A1A1A !important;
 }
 
+body.light-mode .premium-card:hover {
+  box-shadow:
+    0 24px 60px -16px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(184, 134, 11, 0.15),
+    0 0 28px -8px rgba(184, 134, 11, 0.2);
+}
+
 /* Text overrides */
 body.light-mode .arsenal-card-desc,
 body.light-mode p,
@@ -253,6 +261,23 @@ body.light-mode .terminal-launch-btn {
 body.light-mode .terminal-panel {
   background-color: #1A1410 !important;
   border-color: #B8860B !important;
+  color: #EAEAEA !important;
+}
+
+body.light-mode .terminal-input {
+  color: #EAEAEA !important;
+}
+
+body.light-mode .t-line--system {
+  color: #7A9A7A !important;
+}
+
+body.light-mode .terminal-title {
+  color: #888888 !important;
+}
+
+body.light-mode .terminal-hint {
+  color: #777777 !important;
 }
 
 /* System log footer */

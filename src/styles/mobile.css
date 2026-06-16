@@ -1,0 +1,632 @@
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATION LAYER — @media (max-width: 767px)
+   Targets: pointer:coarse, touch-first, 44px targets, 60fps
+══════════════════════════════════════════════════════════════════ */
+
+/* ── 0. GLOBAL RESETS ──────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .custom-cursor,
+  .cursor-dot {
+    display: none !important;
+  }
+
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
+    /* iOS rubber-band only on Y */
+    overscroll-behavior-x: none;
+  }
+
+  /* Restore pointer when custom cursor is hidden */
+  body {
+    cursor: auto;
+  }
+
+  a, button, input, textarea, select {
+    cursor: auto !important;
+  }
+
+  /* ── App shell ── */
+  .app-container {
+    overflow-x: hidden;
+  }
+
+  .main-content {
+    padding-left: 0 !important;
+    /* Bottom safe area: bottom-nav ~72px + syslog 0px (hidden on mobile) */
+    padding-bottom: 88px !important;
+  }
+
+  /* ── 1. SYSTEM LOG FOOTER — hidden on mobile ── */
+  .syslog-footer {
+    display: none !important;
+  }
+
+  /* Remove body padding reserved for syslog footer */
+  body {
+    padding-bottom: 0 !important;
+  }
+
+  /* ── 2. FLOATING NAV — safe-area-aware bottom tab bar ── */
+  .floating-nav-container {
+    position: fixed;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 200;
+    padding: 0;
+    gap: 0;
+    /* Safe area for notched phones */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .floating-nav {
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 !important;
+    width: 100% !important;
+    gap: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    /* Suppress desktop hover-expand */
+    transition: none !important;
+  }
+
+  .floating-nav:hover {
+    width: 100% !important;
+  }
+
+  .floating-nav:hover .nav-label {
+    opacity: 0 !important;
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    /* Strict 44×44px minimum touch target */
+    min-height: 56px;
+    padding: 8px 4px !important;
+    width: auto !important;
+    border-radius: 0 !important;
+    transition: background-color 0.15s ease !important;
+  }
+
+  .nav-item:active {
+    background-color: rgba(212, 175, 55, 0.08) !important;
+    transform: none !important;
+  }
+
+  /* Labels visible under icons on mobile tab bar */
+  .nav-label {
+    display: block !important;
+    opacity: 1 !important;
+    font-size: 0.6rem !important;
+    letter-spacing: 0.04em !important;
+    white-space: nowrap;
+    transition: none !important;
+  }
+
+  .nav-indicator {
+    display: none !important;
+  }
+
+  .nav-item.active .nav-icon {
+    color: var(--accent-gold);
+  }
+
+  .nav-item.active .nav-label {
+    color: var(--accent-gold);
+  }
+
+  /* Terminal launch button — hidden on mobile (terminal accessible via GhostHint) */
+  .terminal-launch-btn {
+    display: none !important;
+  }
+
+  /* ── 3. COMMAND TERMINAL — mobile overlay ── */
+  .terminal-panel {
+    top: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-height: 85vh;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terminal-output {
+    min-height: 160px !important;
+    max-height: 45vh !important;
+    padding: 12px 14px !important;
+  }
+
+  .terminal-input-row {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+
+  /* 16px prevents iOS Safari auto-zoom */
+  .terminal-input {
+    font-size: 16px !important;
+  }
+
+  .terminal-prompt {
+    font-size: 0.72rem !important;
+  }
+
+  .terminal-title {
+    font-size: 0.6rem !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* Mobile-visible close button injected via TSX */
+  .terminal-close-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 1.2rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .terminal-hint {
+    display: none !important;
+  }
+
+  /* ── 4. PAGE SHELL PADDING ── */
+  .app-container > main {
+    padding: 1rem !important;
+  }
+
+  /* ── 5. HOME — HERO ── */
+  .hero-section {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    min-height: auto !important;
+    gap: 24px !important;
+    padding-top: 24px !important;
+  }
+
+  .hero-content {
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 10vw, 3.5rem) !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .typing-summary {
+    font-size: 0.85rem !important;
+    max-width: 100% !important;
+  }
+
+  .hero-actions {
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  /* Pill buttons — ensure 44px touch target */
+  .pill-btn {
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    min-height: 44px;
+  }
+
+  /* Hero avatar — scaled down to prevent overflow */
+  .hero-avatar {
+    flex: none !important;
+    width: 200px !important;
+  }
+
+  .avatar-container {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .avatar-image {
+    width: 160px !important;
+    height: 160px !important;
+  }
+
+  /* ── 6. HOME — TELEMETRY DASHBOARD / BENTO GRID ── */
+  .telemetry-dashboard {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Disable mouse-tracking spotlight on touch — static fallback */
+  .premium-card,
+  .identity-card,
+  .baseline-card,
+  .skill-float-card,
+  .status-bento {
+    /* Remove the dynamic spotlight pseudo-element glow on mobile */
+    --spot-x: -9999px !important;
+    --spot-y: -9999px !important;
+    /* Replace with a static gold-accent border */
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  }
+
+  /* Active press state instead of hover */
+  .premium-card:active,
+  .skill-float-card:active {
+    border-color: rgba(212, 175, 55, 0.5) !important;
+    transform: scale(0.985);
+    transition: transform 0.1s ease, border-color 0.1s ease;
+  }
+
+  /* ── 7. HOME — TECH ARSENAL (SKILL TAGS) ── */
+  .arsenal-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  .arsenal-tabs {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+
+  .skills-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  /* Disable drag physics on mobile — arrange as dense flex-wrap */
+  .skill-node {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    cursor: default !important;
+    user-select: none;
+    -webkit-user-select: none;
+    /* Slightly larger for touch */
+    padding: 8px 14px !important;
+    font-size: 0.82rem !important;
+    margin: 0 !important;
+  }
+
+  .arsenal-content {
+    padding: 16px !important;
+  }
+
+  .tab-btn {
+    padding: 12px 14px !important;
+    font-size: 0.8rem !important;
+    min-height: 44px;
+    gap: 6px !important;
+  }
+
+  /* ── 8. HOME — LIQUID FLASK GAUGE (50% scale) ── */
+  .flask-vial-wrap canvas {
+    width: 45px !important;
+    height: 87px !important;
+  }
+
+  .liquid-gauges-row {
+    gap: 24px !important;
+    justify-content: center;
+  }
+
+  .liquid-gauge-item {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .liquid-gauge-info {
+    text-align: left !important;
+  }
+
+  /* ── 9. HOME — SOFT SKILLS ── */
+  .soft-skills-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* ── 10. ARSENAL PAGE ── */
+  .arsenal-page {
+    padding: 16px !important;
+  }
+
+  .arsenal-hero {
+    grid-template-columns: 1fr !important;
+    padding-top: 1.5rem !important;
+  }
+
+  /* Reactor core: limit to 2 rings via CSS scoping + reduce size */
+  .arsenal-hero svg {
+    max-width: 220px !important;
+    margin: 0 auto;
+  }
+
+  /* Disable backdrop-filter on cards to prevent GPU scroll-lag */
+  .arsenal-grid-card,
+  .premium-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .tier-section {
+    margin-top: 32px !important;
+    margin-bottom: 32px !important;
+  }
+
+  .tier-header {
+    font-size: 1.1rem !important;
+  }
+
+  /* ── 11. TROPHIES PAGE ── */
+
+  /* Vertical scroll trace — shift to left edge */
+  .timeline-container {
+    gap: 0 !important;
+  }
+
+  .timeline-spine-wrap {
+    margin-right: 16px !important;
+  }
+
+  /* 3D tilt cards — strip transforms, static on mobile */
+  .tilt-card-wrapper,
+  [style*="rotateX"],
+  [style*="rotateY"] {
+    transform: none !important;
+    perspective: none !important;
+  }
+
+  /* Cert cards — disable tilt, preserve border beam */
+  .cert-card {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .cert-card:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .cert-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Grand Line Ships — stack vertically with reduced padding */
+  .grand-line-sea-container {
+    padding-bottom: 36px !important;
+  }
+
+  .apex-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .grand-line-card {
+    /* Stop float animation on mobile */
+    animation: none !important;
+    transform: none !important;
+    padding: 16px 16px 14px !important;
+    min-height: 130px !important;
+  }
+
+  .grand-line-card:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.12s ease !important;
+  }
+
+  /* Compress the SVG wave sea height */
+  .grand-line-sea {
+    height: 32px !important;
+  }
+
+  /* Scale down Log Pose compass */
+  .log-pose-svg {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .gl-icon-wrap {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .gl-title {
+    font-size: 0.8rem !important;
+  }
+
+  .gl-detail {
+    font-size: 0.78rem !important;
+  }
+
+  /* Trophies hero */
+  .trophies-hero {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* ── 12. CONTACT PAGE ── */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .contact-header {
+    font-size: 2.2rem !important;
+  }
+
+  .contact-subtext {
+    max-width: 100% !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* Terminal form — full width with safe margins */
+  .terminal-container {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .terminal-body {
+    padding: 16px !important;
+  }
+
+  /* 16px = iOS Safari auto-zoom prevention */
+  .terminal-input,
+  textarea.terminal-input {
+    font-size: 16px !important;
+  }
+
+  /* Submit button — full width, 44px height */
+  .execute-btn {
+    width: 100% !important;
+    min-height: 48px;
+    font-size: 0.95rem !important;
+  }
+
+  /* Toast — slide down from top on mobile */
+  .toast {
+    top: 16px !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 32px) !important;
+    max-width: 400px !important;
+    border-radius: 8px !important;
+    border-left: none !important;
+    border-top: 3px solid currentColor !important;
+  }
+
+  /* ── 13. GHOST HINT — visible on mobile as a tap trigger ── */
+  .ghost-hint {
+    opacity: 0.8 !important;
+    padding: 8px 16px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+    /* Enough height for thumb tap */
+    min-height: 44px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(212, 175, 55, 0.05) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 6px !important;
+  }
+
+  .ghost-hint-key, .ghost-hint-sep {
+    display: none !important;
+  }
+
+  .ghost-hint-label {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .ghost-hint-label::before {
+    content: '[ TAP ] ';
+    color: var(--accent-gold);
+    font-weight: bold;
+  }
+
+  /* ── 14. SECTION HEADERS ── */
+  .section-header h2,
+  .languages-header,
+  .soft-skills-header {
+    font-size: 1.2rem !important;
+  }
+
+  /* ── 15. KINETIC RIBBON ── */
+  .kinetic-ribbon-section {
+    margin: -12px 0 !important;
+  }
+
+  /* ── 16. DISABLE COSTLY hover-transitions on touch ── */
+  @media (pointer: coarse) {
+    .pill-btn::before {
+      display: none !important;
+    }
+
+    .nav-item:hover {
+      transform: none !important;
+      background-color: transparent !important;
+    }
+
+    /* Disable hover-expand on nav */
+    .floating-nav:hover {
+      width: 100% !important;
+    }
+  }
+}
+
+/* ── 17. VERY SMALL SCREENS (≤380px) ── */
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 2rem !important;
+  }
+
+  .contact-header {
+    font-size: 1.8rem !important;
+  }
+
+  .avatar-container {
+    width: 160px !important;
+    height: 160px !important;
+  }
+
+  .avatar-image {
+    width: 128px !important;
+    height: 128px !important;
+  }
+
+  .pill-btn {
+    font-size: 0.72rem !important;
+    padding: 8px 10px !important;
+  }
+}
